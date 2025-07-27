@@ -765,31 +765,56 @@
                     let contentStr = await documentXml.async('text');
 
                     // --- Perform Date Replacements ---
+                    // Function to format date for the specific document style (e.g., 01 0 4 / 14 0 4)
                     function formatDateForDoc(dateStr) {
                         const parts = dateStr.split("/");
                         if (parts.length !== 3) return dateStr;
                         const [y, m, d] = parts;
+                        // Format as "dd d / d m / m yy y y" with spaces
                         return `${d[0]} ${d[1]} / ${m[0]} ${m[1]} / ${y[0]}${y[1]} ${y[2]} ${y[3]}`;
                     }
 
                     const newStartDocFormat = formatDateForDoc(newStartDateStr);
                     const newEndDocFormat = formatDateForDoc(newEndDateStr);
 
-                    // Broad pattern to match the date format in the document
-                    const broadDatePattern = /(\d)\s*(\d)\s*\/\s*(\d)\s*(\d)\s*\/\s*(\d)(\d)\s*(\d)\s*(\d)/g;
-                    const potentialDates = [...contentStr.matchAll(broadDatePattern)];
+                    // --- 1. Replace dates in the header (e.g., تاریخ: 01 / 0 4 / 140 4) ---
+                    // Pattern: تاریخ: followed by the old date format
+                    const headerDatePattern = /(تاریخ\s*:\s*)(\d)\s*(\d)\s*\/\s*(\d)\s*(\d)\s*\/\s*(\d)(\d)\s*(\d)\s*(\d)/g;
+                    const potentialHeaderDates = [...contentStr.matchAll(headerDatePattern)];
                     
-                    // Replace the first two dates found (assuming they are contract start/end dates)
-                    if (potentialDates.length >= 2) {
-                        const firstDateMatch = potentialDates[0][0];
-                        const secondDateMatch = potentialDates[1][0];
-                        
-                        contentStr = contentStr.replace(firstDateMatch, newStartDocFormat);
-                        contentStr = contentStr.replace(secondDateMatch, newEndDocFormat);
+                    if (potentialHeaderDates.length > 0) {
+                        // Replace the first header date found (assuming there's only one)
+                        const firstHeaderMatch = potentialHeaderDates[0];
+                        const fullMatch = firstHeaderMatch[0]; // e.g., "تاریخ: 01 / 0 4 / 140 4"
+                        const prefix = firstHeaderMatch[1]; // e.g., "تاریخ: "
+                        const oldDatePart = firstHeaderMatch.slice(2).join(''); // e.g., "01041404"
+                        // Reconstruct the replacement with the new date in the same format
+                        contentStr = contentStr.replace(fullMatch, `${prefix}${newStartDocFormat}`);
                     } else {
-                        // Fallback: try replacing the specific example dates if they exist
-                        contentStr = contentStr.replace(/01\s*\/\s*0\s*4\s*\/\s*14\s*0\s*4/g, newStartDocFormat);
-                        contentStr = contentStr.replace(/31\s*\/\s*0\s*6\s*\/\s*14\s*0\s*4/g, newEndDocFormat);
+                        // Fallback: if the structured pattern doesn't work, try a simpler replacement for the start date in header
+                        // This is less precise but might catch it if the format is slightly different
+                         contentStr = contentStr.replace(/(تاریخ\s*:)[\s\d\/]*/g, `$1 ${newStartDocFormat}`);
+                    }
+
+                    // --- 2. Replace dates in the contract body (MADDE 3) ---
+                    // Pattern: "از تاريخ" followed by the start date, then "تا" followed by the end date
+                    // This is more complex, so we'll target the specific structure around MADDE 3
+                    // Find the section containing the dates in MADDE 3
+                    const madde3Pattern = /(از\s*تاريخ\s*)(\d)\s*(\d)\s*\/\s*(\d)\s*(\d)\s*\/\s*(\d)(\d)\s*(\d)\s*(\d)(\s*تا\s*)(\d)\s*(\d)\s*\/\s*(\d)\s*(\d)\s*\/\s*(\d)(\d)\s*(\d)\s*(\d)/g;
+                    const potentialMadde3Dates = [...contentStr.matchAll(madde3Pattern)];
+                    
+                    if (potentialMadde3Dates.length > 0) {
+                        // Replace the first occurrence (assuming MADDE 3 is unique)
+                        const firstMadde3Match = potentialMadde3Dates[0];
+                        const fullMatch = firstMadde3Match[0]; // e.g., "از تاريخ 01 / 0 4 / 140 4 تا 31 / 0 6 / 14 0 4"
+                        const prefix = firstMadde3Match[1]; // e.g., "از تاريخ "
+                        const suffix = firstMadde3Match[10]; // e.g., " تا "
+                        // Reconstruct with new dates
+                        contentStr = contentStr.replace(fullMatch, `${prefix}${newStartDocFormat}${suffix}${newEndDocFormat}`);
+                    } else {
+                        // Fallback: try replacing the specific example dates if they exist in the body
+                        contentStr = contentStr.replace(/(از\s*تاريخ\s*)(01\s*\/\s*0\s*4\s*\/\s*14\s*0\s*4)/, `$1${newStartDocFormat}`);
+                        contentStr = contentStr.replace(/(تا\s*)(31\s*\/\s*0\s*6\s*\/\s*14\s*0\s*4)/, `$1${newEndDocFormat}`);
                     }
 
                     // --- Perform Annual Replacements if needed ---
