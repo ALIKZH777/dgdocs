@@ -3,57 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ویرایشگر قراردادهای حمل و نقل</title>
+    <title>دستیار قرارداد با هوش مصنوعی واقعی</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
         :root {
-            --primary-color: #1a3a5f;
-            --secondary-color: #2c8cbc;
+            --primary-color: #1d3557;
+            --secondary-color: #457b9d;
             --accent-color: #e63946;
-            --light-bg: #f1f8fc;
+            --light-bg: #f1faee;
             --dark-text: #212529;
-            --light-text: #f8f9fa;
-            --border-color: #c5d5e0;
+            --border-color: #a8dadc;
             --success-color: #2a9d8f;
-            --warning-color: #e9c46a;
+            --warning-color: #f4a261;
             --error-color: #e76f51;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --info-color: #219ebc;
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, #14213d 100%);
+            --gradient-secondary: linear-gradient(90deg, var(--secondary-color), var(--info-color));
+            --gradient-accent: linear-gradient(90deg, var(--accent-color), #ff6b6b);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
         }
-
         body {
             font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
-            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+            background: linear-gradient(to bottom, #e0f7fa, #bbdefb);
             color: var(--dark-text);
             line-height: 1.7;
             padding: 20px;
             min-height: 100vh;
         }
-
         .container {
-            max-width: 1300px;
+            max-width: 1600px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             box-shadow: var(--shadow);
             overflow: hidden;
         }
-
         header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #0d1b2a 100%);
+            background: var(--gradient-primary);
             color: white;
-            padding: 30px;
+            padding: 50px 30px;
             text-align: center;
+            border-bottom: 6px solid var(--accent-color);
             position: relative;
             overflow: hidden;
         }
-
         header::before {
             content: "";
             position: absolute;
@@ -64,845 +66,992 @@
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
             transform: rotate(30deg);
         }
-
-        header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            font-weight: 700;
+        header h1 { 
+            font-size: 3rem; 
+            margin-bottom: 10px; 
+            font-weight: 700; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); 
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
-
-        header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+        header p { 
+            font-size: 1.3rem; 
+            opacity: 0.9; 
+            max-width: 800px;
+            margin: 0 auto;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
-
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 30px;
             padding: 30px;
         }
-
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 1200px) { 
+            .main-content { 
+                grid-template-columns: 1fr; 
+            } 
         }
-
         .panel {
-            background: var(--light-bg);
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: var(--shadow);
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid #e9ecef;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             transition: var(--transition);
-            border: 1px solid var(--border-color);
         }
-
         .panel:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
-
         .panel h2 {
             color: var(--primary-color);
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid var(--secondary-color);
-            font-size: 1.6rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid var(--secondary-color);
+            font-size: 1.8rem;
             display: flex;
             align-items: center;
         }
-
-        .panel h2::before {
-            content: "📋";
-            margin-left: 10px;
+        .panel h2 i {
+            margin-left: 15px;
+            font-size: 1.8rem;
         }
-
-        .form-group {
-            margin-bottom: 22px;
+        .form-group { 
+            margin-bottom: 22px; 
         }
-
         label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--primary-color);
-            font-size: 1.05rem;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 1.05rem;
-            transition: var(--transition);
-            background: white;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(44, 140, 188, 0.2);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 14px 28px;
-            background: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-family: inherit;
             font-size: 1.1rem;
-            font-weight: 500;
-            text-align: center;
-            transition: var(--transition);
-            text-decoration: none;
-            margin: 8px 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-
-        .btn i {
-            margin-left: 8px;
-            font-size: 1.2rem;
-        }
-
-        .btn:hover:not(:disabled) {
-            background: #1a6b8f;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn:disabled {
-            background: #b0bec5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-accent {
-            background: var(--accent-color);
-        }
-
-        .btn-accent:hover:not(:disabled) {
-            background: #c1121f;
-        }
-
-        .btn-success {
-            background: var(--success-color);
-        }
-
-        .btn-success:hover:not(:disabled) {
-            background: #218a7d;
-        }
-
-        .file-upload-wrapper {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            border: 3px dashed var(--border-color);
-            border-radius: 15px;
-            background: white;
-            transition: var(--transition);
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .file-upload-wrapper:hover {
-            border-color: var(--secondary-color);
-            background: rgba(44, 140, 188, 0.05);
-        }
-
-        .file-upload-wrapper.active {
-            border-color: var(--success-color);
-            background: rgba(42, 157, 143, 0.05);
-        }
-
-        .file-upload-icon {
-            font-size: 4rem;
-            color: var(--secondary-color);
-            margin-bottom: 20px;
-            transition: var(--transition);
-        }
-
-        .file-upload-wrapper:hover .file-upload-icon {
-            transform: scale(1.1);
-        }
-
-        .file-upload-text {
-            text-align: center;
-            color: var(--dark-text);
-        }
-
-        .file-upload-text h3 {
-            margin-bottom: 12px;
-            font-size: 1.4rem;
-            color: var(--primary-color);
-        }
-
-        #fileInput {
-            position: absolute;
+        input, textarea, select {
             width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .file-list {
-            margin-top: 25px;
-            max-height: 250px;
-            overflow-y: auto;
+            padding: 15px 18px;
             border: 1px solid var(--border-color);
             border-radius: 10px;
-            padding: 15px;
-            background: white;
-        }
-
-        .file-item {
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            font-family: inherit;
+            font-size: 1.05rem;
             transition: var(--transition);
-            border-radius: 6px;
+            background-color: #f8f9fa;
         }
-
-        .file-item:hover {
-            background-color: rgba(44, 140, 188, 0.05);
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(69, 123, 157, 0.25);
+            background-color: white;
         }
-
-        .file-item:last-child {
-            border-bottom: none;
-        }
-
-        .file-name {
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-left: 12px;
-            font-size: 0.95rem;
-        }
-
-        .file-remove {
-            color: var(--error-color);
+        .btn {
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            padding: 15px 35px; 
+            background: var(--gradient-secondary); 
+            color: white;
+            border: none; 
+            border-radius: 12px; 
             cursor: pointer;
-            font-size: 1.4rem;
+            font-size: 1.2rem; 
+            font-weight: 700; 
             transition: var(--transition);
-            padding: 5px;
-            border-radius: 50%;
+            margin: 5px; 
+            text-decoration: none; 
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+            min-width: 200px;
         }
-
+        .btn:hover:not(:disabled) {
+            background: var(--gradient-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .btn:disabled { 
+            background: #ced4da; 
+            cursor: not-allowed; 
+            box-shadow: none; 
+            transform: none;
+        }
+        .btn-accent { 
+            background: var(--gradient-accent); 
+        }
+        .btn-accent:hover:not(:disabled) { 
+            background: linear-gradient(90deg, #c91c28, #ff4b4b);
+        }
+        .btn-success { 
+            background: var(--gradient-secondary); 
+        }
+        .btn-success:hover:not(:disabled) { 
+            background: linear-gradient(90deg, #218a7d, #3bb09d);
+        }
+        .btn-warning {
+            background: var(--gradient-accent);
+        }
+        .btn-warning:hover:not(:disabled) {
+            background: linear-gradient(90deg, #e76f51, #f4a261);
+        }
+        .file-upload-wrapper {
+            position: relative; 
+            padding: 50px; 
+            border: 3px dashed var(--border-color);
+            border-radius: 20px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: var(--transition);
+            background-color: var(--light-bg);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .file-upload-wrapper:hover, .file-upload-wrapper.active {
+            border-color: var(--secondary-color);
+            transform: scale(1.02);
+            background: #eaf7f7;
+        }
+        #fileInput { 
+            display: none; 
+        }
+        #fileName { 
+            margin-top: 15px; 
+            color: var(--success-color); 
+            font-weight: 600; 
+            font-size: 1.2rem; 
+        }
+        .file-list { 
+            margin-top: 20px; 
+            max-height: 300px; 
+            overflow-y: auto; 
+            border: 1px solid #ddd; 
+            border-radius: 10px; 
+            padding: 10px; 
+            background: #f8f9fa; 
+        }
+        .file-item { 
+            padding: 14px; 
+            border-bottom: 1px solid #e9ecef; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: background-color 0.2s; 
+        }
+        .file-item:last-child { 
+            border-bottom: none; 
+        }
+        .file-item:hover { 
+            background-color: #e9ecef; 
+        }
+        .file-remove { 
+            color: var(--accent-color); 
+            cursor: pointer; 
+            font-size: 1.6rem; 
+            font-weight: bold; 
+            transition: var(--transition);
+        }
         .file-remove:hover {
-            background-color: rgba(231, 111, 81, 0.1);
             transform: scale(1.2);
         }
-
-        .progress-container {
-            margin-top: 25px;
-            display: none;
+        .progress-container { 
+            margin-top: 25px; 
+            display: none; 
         }
-
-        .progress-bar {
-            height: 25px;
-            background: #e0e0e0;
-            border-radius: 12px;
+        .progress-bar { 
+            height: 30px; 
+            background: #e9ecef; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            position: relative; 
+        }
+        .progress-fill { 
+            height: 100%; 
+            background: var(--gradient-secondary); 
+            width: 0%; 
+            transition: width 0.5s ease; 
+        }
+        .progress-text { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 1.1rem; 
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4); 
+        }
+        .status-message { 
+            margin-top: 20px; 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center; 
+            font-weight: 500; 
+            font-size: 1.2rem; 
+            display: none; 
+            animation: fadeIn 0.5s ease; 
+            position: relative;
             overflow: hidden;
-            position: relative;
         }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
-            width: 0%;
-            transition: width 0.4s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 0.9rem;
-            font-weight: bold;
-            position: relative;
-            z-index: 1;
-        }
-
-        .progress-text {
+        .status-message::before {
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            z-index: 2;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
         }
-
-        .status-message {
-            margin-top: 20px;
-            padding: 18px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: 500;
-            font-size: 1.1rem;
-            display: none;
-            animation: fadeIn 0.5s ease;
+        .status-message.processing::before {
+            animation: shimmer 1.5s infinite;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn { 
+            from { 
+                opacity: 0; 
+                transform: translateY(10px); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
         }
-
-        .status-message.success {
-            background: rgba(42, 157, 143, 0.15);
-            color: var(--success-color);
-            border: 1px solid var(--success-color);
-            display: block;
+        @keyframes shimmer {
+            100% {
+                transform: translateX(100%);
+            }
         }
-
-        .status-message.error {
-            background: rgba(231, 111, 81, 0.15);
-            color: var(--error-color);
-            border: 1px solid var(--error-color);
-            display: block;
+        .status-message.success { 
+            background: #e6fffa; 
+            color: #047857; 
+            border: 2px solid #6ee7b7; 
+            display: block; 
         }
-
-        .status-message.processing {
-            background: rgba(233, 196, 106, 0.15);
-            color: #856404;
-            border: 1px solid var(--warning-color);
-            display: block;
+        .status-message.error { 
+            background: #fee2e2; 
+            color: #b91c1c; 
+            border: 2px solid #fca5a5; 
+            display: block; 
         }
-
+        .status-message.processing { 
+            background: #fef9c3; 
+            color: #a16207; 
+            border: 2px solid #fde047; 
+            display: block; 
+        }
+        .input-group { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 25px; 
+        }
+        @media (max-width: 600px) { 
+            .input-group { 
+                grid-template-columns: 1fr; 
+                gap: 0; 
+            } 
+        }
         footer {
             text-align: center;
-            padding: 25px;
-            background: var(--light-bg);
-            color: var(--dark-text);
-            border-top: 1px solid var(--border-color);
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
             font-size: 1rem;
         }
-
-        .hidden {
-            display: none;
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
         }
-
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .feature-list li i {
+            margin-left: 10px;
+            color: var(--success-color);
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            flex: 1;
+            margin: 5px;
+            min-width: 120px;
+        }
+        .stat-item .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .stat-item .label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark-text);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .card-title i {
+            margin-left: 10px;
+        }
         .instructions {
             background: #e3f2fd;
-            border-right: 5px solid var(--secondary-color);
-            padding: 20px;
+            border-right: 4px solid var(--info-color);
+            padding: 15px;
             border-radius: 0 10px 10px 0;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin: 20px 0;
         }
-
         .instructions h3 {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
+            margin-top: 0;
+            color: var(--info-color);
         }
-
-        .instructions h3::before {
-            content: "ℹ️";
-            margin-left: 10px;
-        }
-
         .instructions ul {
-            padding-right: 25px;
+            padding-right: 20px;
         }
-
         .instructions li {
-            margin-bottom: 12px;
-            line-height: 1.6;
+            margin-bottom: 10px;
         }
-
-        .section-title {
+        /* Checkbox styling for selective fields */
+        .field-checkbox {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
-            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            transition: background-color 0.3s;
         }
-
-        .section-title::before {
-            content: "🔹";
+        .field-checkbox:hover {
+            background-color: #e9ecef;
+        }
+        .field-checkbox input[type="checkbox"] {
+            width: auto;
+            margin-left: 10px;
+            transform: scale(1.3);
+        }
+        .field-checkbox label {
+            margin-bottom: 0;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        .checkbox-group {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #fafafa;
+        }
+        .checkbox-group h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-group h3 i {
             margin-left: 10px;
         }
-
-        .input-group {
-            display: flex;
-            gap: 15px;
+        .field-section {
+            display: none;
         }
-
-        .input-group .form-group {
-            flex: 1;
-        }
-
-        @media (max-width: 600px) {
-            .input-group {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .btn {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            
-            header h1 {
-                font-size: 2.2rem;
-            }
-        }
-
-        .highlight {
-            background-color: rgba(233, 196, 106, 0.3);
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-weight: 500;
+        .field-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🔧 ویرایشگر قراردادهای حمل و نقل</h1>
-            <p>ابزار جامع و دقیق برای ویرایش انبوه قراردادهای Word بدون نیاز به سرور</p>
+            <h1><i class="fas fa-robot"></i> دستیار هوشمند قرارداد</h1>
+            <p>قراردادهای تکمیل‌شده را آپلود کنید، هوش مصنوعی فیلدها را تشخیص می‌دهد، سپس ویرایش و به صورت گروهی تولید کنید</p>
         </header>
-
+        
         <div class="main-content">
             <div class="panel">
-                <h2>📤 آپلود فایل‌ها</h2>
+                <h2><i class="fas fa-upload"></i> ۱. بارگذاری و تحلیل</h2>
+                <div class="file-upload-wrapper" id="dropZone">
+                    <i class="fas fa-file-word fa-3x" style="color: var(--secondary-color); margin-bottom: 15px;"></i>
+                    <h3>فایل قرارداد مرجع (.docx) را اینجا بکشید</h3>
+                    <p>یا برای انتخاب کلیک کنید</p>
+                    <input type="file" id="fileInput" accept=".docx">
+                    <div id="fileName"></div>
+                </div>
+                
                 <div class="instructions">
-                    <h3>راهنمای استفاده:</h3>
+                    <h3><i class="fas fa-info-circle"></i> راهنمای استفاده</h3>
                     <ul>
-                        <li>فایل‌های Word (.docx) قراردادها را <span class="highlight">آپلود</span> کنید</li>
-                        <li><span class="highlight">نوع تغییر</span> قرارداد را انتخاب نمایید</li>
-                        <li><span class="highlight">اطلاعات جدید</span> را وارد کنید</li>
-                        <li>روی "<span class="highlight">پردازش فایل‌ها</span>" کلیک کنید</li>
-                        <li>فایل‌های ویرایش‌شده را <span class="highlight">دانلود</span> نمایید</li>
+                        <li>فایل قرارداد مرجع خود را در این قسمت آپلود کنید</li>
+                        <li>سیستم به طور خودکار فیلدهای قرارداد را تشخیص می‌دهد</li>
+                        <li>فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید</li>
+                        <li>اطلاعات جدید را وارد کرده و به لیست اضافه کنید</li>
+                        <li>در نهایت تمام قراردادها را به صورت یک فایل ZIP دانلود کنید</li>
                     </ul>
                 </div>
                 
-                <div class="file-upload-wrapper" id="dropZone">
-                    <div class="file-upload-icon">📁</div>
-                    <div class="file-upload-text">
-                        <h3>فایل‌های قرارداد را اینجا بکشید</h3>
-                        <p>یا برای انتخاب فایل کلیک کنید</p>
-                        <small style="color: #666;">(فقط فایل‌های .docx مجاز هستند)</small>
-                    </div>
-                    <input type="file" id="fileInput" accept=".docx" multiple>
+                <h2 style="margin-top: 30px;"><i class="fas fa-list"></i> ۲. صف ساخت قراردادها</h2>
+                <div class="file-list" id="contractList">
+                    <p style="text-align: center; color: #666;">قراردادی در صف ساخت نیست.</p>
                 </div>
                 
-                <div class="file-list" id="fileList">
-                    <p style="text-align: center; color: #666;">هیچ فایلی آپلود نشده است.</p>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h2>⚙️ تنظیمات ویرایش</h2>
-                
-                <div class="form-group">
-                    <label for="contractType">نوع تغییر قرارداد:</label>
-                    <select id="contractType">
-                        <option value="three-month">📅 تمدید سه‌ماهه (فقط تاریخ)</option>
-                        <option value="annual">📅 تغییر سالیانه (تاریخ و سایر فیلدها)</option>
-                    </select>
-                </div>
-
-                <div class="section-title">📅 تاریخ‌های جدید قرارداد</div>
-                <div class="input-group">
-                    <div class="form-group">
-                        <label for="newStartDate">تاریخ شروع (YYYY/MM/DD):</label>
-                        <input type="text" id="newStartDate" placeholder="مثال: 1403/01/01">
-                    </div>
-                    <div class="form-group">
-                        <label for="newEndDate">تاریخ پایان (YYYY/MM/DD):</label>
-                        <input type="text" id="newEndDate" placeholder="مثال: 1403/03/31">
-                    </div>
-                </div>
-
-                <div id="annualInputs" class="hidden">
-                    <div class="section-title">💼 اطلاعات سالیانه</div>
-                    
-                    <div class="form-group">
-                        <label for="newBankName">🏦 نام بانک:</label>
-                        <input type="text" id="newBankName" placeholder="مثال: ملی">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="newDriverAmount">💰 مبلغ کمک هزینه سوخت (ریال):</label>
-                        <input type="number" id="newDriverAmount" placeholder="مثال: 291456">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="newCompanyAddress">🏢 آدرس شرکت:</label>
-                        <textarea id="newCompanyAddress" rows="3" placeholder="مثال: اصفهان خیابان حیکم فرزانه خ شهدای دستگرد کوی اول پلاک21"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="newBillAmount">💸 مبلغ سفته (ریال):</label>
-                        <input type="text" id="newBillAmount" placeholder="مثال: 000/000/000/1">
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px;">
-                    <button id="processBtn" class="btn btn-success" disabled>
-                        <i>🔄</i> پردازش و ایجاد فایل‌های جدید
-                    </button>
-
-                    <button id="downloadAllBtn" class="btn btn-accent" disabled>
-                        <i>📦</i> دانلود همه فایل‌ها (ZIP)
-                    </button>
-                </div>
-
                 <div class="progress-container" id="progressContainer">
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill"></div>
                         <div class="progress-text" id="progressText">0%</div>
                     </div>
                 </div>
-
-                <div class="status-message" id="statusMessage"></div>
+                
+                <div id="statusMessage" class="status-message"></div>
+                
+                <div style="text-align: center; margin-top: 25px;">
+                    <button id="processBtn" class="btn btn-success" disabled>
+                        <i class="fas fa-download"></i> ساخت همه قراردادها و دانلود (ZIP)
+                    </button>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h2><i class="fas fa-edit"></i> ۳. فرم ویرایش اطلاعات (تشخیص خودکار)</h2>
+                
+                <div class="checkbox-group">
+                    <h3><i class="fas fa-check-square"></i> فیلدهای قابل ویرایش</h3>
+                    <p>فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید:</p>
+                    
+                    <div class="field-checkbox">
+                        <input type="checkbox" id="chk_owner_full_name" data-field="owner_full_name">
+                        <label for="chk_owner_full_name">نام و نام خانوادگی مالک</label>
+                    </div>
+                    
+                    <div class="field-checkbox">
+                        <input type="checkbox" id="chk_owner_father_name" data-field="owner_father_name">
+                        <label for="chk_owner_father_name">نام پدر</label>
+                    </div>
+                    
+                    <div class="field-checkbox">
+                        <input type="checkbox" id="chk_owner_national_id" data-field="owner_national_id">
+                        <label for="chk_owner_national_id">کد ملی مالک</label>
+                    </div>
+                    
+                    <div class="field-checkbox">
+                        <input type="checkbox" id="chk_owner_mobile" data-field="owner_mobile">
+                        <label for="chk_owner_mobile">شماره موبایل</label>
+                    </div>
+                    
+                    <div class="field-checkbox">
+                        <input type="checkbox" id="chk_owner_address" data-field="owner_address">
+                        <label for="chk_owner_address">آدرس مالک</label>
+                    </div>
+                    
+                    <div class="field-checkbox">
+                        <input type="checkbox" id="chk_contract_dates" data-field="contract_dates">
+                        <label for="chk_contract_dates">تاریخ‌های قرارداد</label>
+                    </div>
+                    
+                    <div class="field-checkbox">
+                        <input type="checkbox" id="chk_guarantee_amount" data-field="guarantee_amount">
+                        <label for="chk_guarantee_amount">مبلغ سفته</label>
+                    </div>
+                </div>
+                
+                <form id="contractForm">
+                    <div id="fieldSections">
+                        <!-- Owner Full Name Section -->
+                        <div class="field-section" id="section_owner_full_name">
+                            <div class="form-group">
+                                <label for="owner_full_name">نام و نام خانوادگی مالک</label>
+                                <input type="text" id="owner_full_name" data-key="owner_full_name">
+                            </div>
+                        </div>
+                        
+                        <!-- Owner Father Name Section -->
+                        <div class="field-section" id="section_owner_father_name">
+                            <div class="form-group">
+                                <label for="owner_father_name">نام پدر</label>
+                                <input type="text" id="owner_father_name" data-key="owner_father_name">
+                            </div>
+                        </div>
+                        
+                        <!-- Owner National ID Section -->
+                        <div class="field-section" id="section_owner_national_id">
+                            <div class="form-group">
+                                <label for="owner_national_id">کد ملی مالک</label>
+                                <input type="text" id="owner_national_id" data-key="owner_national_id">
+                            </div>
+                        </div>
+                        
+                        <!-- Owner Mobile Section -->
+                        <div class="field-section" id="section_owner_mobile">
+                            <div class="form-group">
+                                <label for="owner_mobile">شماره موبایل</label>
+                                <input type="text" id="owner_mobile" data-key="owner_mobile">
+                            </div>
+                        </div>
+                        
+                        <!-- Owner Address Section -->
+                        <div class="field-section" id="section_owner_address">
+                            <div class="form-group">
+                                <label for="owner_address">آدرس مالک</label>
+                                <textarea id="owner_address" data-key="owner_address" rows="2"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Contract Dates Section -->
+                        <div class="field-section" id="section_contract_dates">
+                            <div class="input-group">
+                                <div class="form-group">
+                                    <label for="contract_start_date">تاریخ شروع قرارداد</label>
+                                    <input type="text" id="contract_start_date" data-key="contract_start_date" placeholder="YYYY/MM/DD">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contract_end_date">تاریخ پایان قرارداد</label>
+                                    <input type="text" id="contract_end_date" data-key="contract_end_date" placeholder="YYYY/MM/DD">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Guarantee Amount Section -->
+                        <div class="field-section" id="section_guarantee_amount">
+                            <div class="form-group">
+                                <label for="guarantee_amount">مبلغ سفته</label>
+                                <input type="text" id="guarantee_amount" data-key="guarantee_amount">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="submit" id="addToListBtn" class="btn btn-accent" disabled>
+                            <i class="fas fa-plus"></i> افزودن به صف ساخت
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="action-buttons">
+                    <button id="clearFormBtn" class="btn btn-warning">
+                        <i class="fas fa-eraser"></i> پاک کردن فرم
+                    </button>
+                    <button id="fillSampleBtn" class="btn">
+                        <i class="fas fa-magic"></i> پر کردن نمونه
+                    </button>
+                </div>
             </div>
         </div>
-
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="number" id="fileCount">0</div>
+                <div class="label">فایل آپلود شده</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="contractCount">0</div>
+                <div class="label">قرارداد در صف</div>
+            </div>
+            <div class="stat-item">
+                <div class="number" id="processedCount">0</div>
+                <div class="label">قرارداد پردازش شده</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-star"></i> ویژگی‌های برجسته</h2>
+            <ul class="feature-list">
+                <li><i class="fas fa-check-circle"></i> تشخیص خودکار فیلدهای قرارداد</li>
+                <li><i class="fas fa-check-circle"></i> انتخاب فیلدهای قابل ویرایش</li>
+                <li><i class="fas fa-check-circle"></i> پردازش گروهی قراردادها</li>
+                <li><i class="fas fa-check-circle"></i> دانلود خروجی به صورت فایل ZIP</li>
+                <li><i class="fas fa-check-circle"></i> رابط کاربری زیبا و کاربرپسند</li>
+                <li><i class="fas fa-check-circle"></i> پشتیبانی از drag & drop</li>
+                <li><i class="fas fa-check-circle"></i> نمایش پیشرفت پردازش</li>
+            </ul>
+        </div>
+        
         <footer>
-            <p>&copy; 2024 ویرایشگر قراردادهای حمل و نقل. تمامی حقوق محفوظ است.</p>
-            <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">توسعه‌یافته با ❤️ برای کارایی و دقت بیشتر</p>
+            <p>© 2023 دستیار هوشمند قرارداد. تمامی حقوق محفوظ است.</p>
         </footer>
     </div>
-
-    <!-- Include necessary libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
+    
     <script>
         // ==================== Global Variables ====================
-        let uploadedFiles = [];
-        let processedFiles = [];
+        let referenceFile = null;
+        let originalContent = '';
+        let originalValues = {};
+        let contractsToProcess = [];
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
-        const fileListElement = document.getElementById('fileList');
-        const contractTypeSelect = document.getElementById('contractType');
-        const annualInputsDiv = document.getElementById('annualInputs');
+        const fileNameElement = document.getElementById('fileName');
+        const contractForm = document.getElementById('contractForm');
+        const addToListBtn = document.getElementById('addToListBtn');
+        const contractListElement = document.getElementById('contractList');
         const processBtn = document.getElementById('processBtn');
-        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const statusMessage = document.getElementById('statusMessage');
         const progressContainer = document.getElementById('progressContainer');
         const progressFill = document.getElementById('progressFill');
         const progressText = document.getElementById('progressText');
-        const statusMessage = document.getElementById('statusMessage');
-
+        const clearFormBtn = document.getElementById('clearFormBtn');
+        const fillSampleBtn = document.getElementById('fillSampleBtn');
+        const fileCountElement = document.getElementById('fileCount');
+        const contractCountElement = document.getElementById('contractCount');
+        const processedCountElement = document.getElementById('processedCount');
+        
+        // ==================== AI-Powered Field Definitions ====================
+        function createTableAwareRegex(label) {
+            return new RegExp(`<w:t>${label}<\/w:t>.*?<\/w:tc>.*?<w:tc.*?>(.*?)<\/w:tc>`);
+        }
+        
+        const FIELD_DEFINITIONS = {
+            owner_full_name: [createTableAwareRegex('نام و نام خانوادگی:')],
+            owner_father_name: [createTableAwareRegex('نام پدر:')],
+            owner_national_id: [createTableAwareRegex('کد ملی:')],
+            owner_id_number: [createTableAwareRegex('شماره شناسنامه:')],
+            owner_mobile: [createTableAwareRegex('شماره تلفن همراه:')],
+            owner_address: [createTableAwareRegex('نشانی اقامتگاه:')],
+            dates: [/از\s*تاريخ\s*(.*?)\s*تا\s*(.*?)\s*معتبر است/],
+            guarantee_amount: [/یک عدد سفته به مبلغ\s*(.*?)\s*ریال/]
+        };
+        
         // ==================== Helper Functions ====================
         function showMessage(text, type) {
             statusMessage.textContent = text;
             statusMessage.className = 'status-message ' + type;
         }
-
-        function hideMessage() {
-            statusMessage.className = 'status-message hidden';
-        }
-
-        function updateFileList() {
-            fileListElement.innerHTML = '';
-            if (uploadedFiles.length === 0) {
-                fileListElement.innerHTML = '<p style="text-align: center; color: #666;">هیچ فایلی آپلود نشده است.</p>';
+        
+        function updateContractList() {
+            contractListElement.innerHTML = '';
+            if (contractsToProcess.length === 0) {
+                contractListElement.innerHTML = '<p style="text-align: center; color: #666;">قراردادی در صف ساخت نیست.</p>';
+                processBtn.disabled = true;
+                contractCountElement.textContent = '0';
                 return;
             }
             
-            const list = document.createElement('div');
-            uploadedFiles.forEach((file, index) => {
+            contractsToProcess.forEach((contract, index) => {
                 const item = document.createElement('div');
                 item.className = 'file-item';
                 item.innerHTML = `
-                    <span class="file-name" title="${file.name}">${file.name}</span>
-                    <span class="file-remove" data-index="${index}" title="حذف فایل">×</span>
+                    <span>${index + 1}. قرارداد برای: <strong>${contract.newValues.owner_full_name || 'نامشخص'}</strong></span>
+                    <span class="file-remove" data-index="${index}" title="حذف از لیست">×</span>
                 `;
-                list.appendChild(item);
+                contractListElement.appendChild(item);
             });
-            fileListElement.appendChild(list);
             
-            // Add event listeners to remove buttons
             document.querySelectorAll('.file-remove').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-index'));
-                    uploadedFiles.splice(index, 1);
-                    updateFileList();
-                    processBtn.disabled = uploadedFiles.length === 0;
+                    contractsToProcess.splice(parseInt(this.dataset.index), 1);
+                    updateContractList();
                 });
             });
+            
+            processBtn.disabled = false;
+            contractCountElement.textContent = contractsToProcess.length;
         }
-
+        
         function updateProgress(percent) {
             const roundedPercent = Math.round(percent);
             progressFill.style.width = percent + '%';
             progressText.textContent = roundedPercent + '%';
         }
-
-        // ==================== Event Listeners ====================
-        fileInput.addEventListener('change', function(event) {
-            const newFiles = Array.from(event.target.files);
-            uploadedFiles = uploadedFiles.concat(newFiles);
-            updateFileList();
-            processBtn.disabled = uploadedFiles.length === 0;
-            dropZone.classList.remove('active');
-        });
-
-        // Drag and drop functionality
-        dropZone.addEventListener('dragover', function(e) {
-            e.preventDefault();
-            dropZone.classList.add('active');
-        });
-
-        dropZone.addEventListener('dragleave', function() {
-            dropZone.classList.remove('active');
-        });
-
-        dropZone.addEventListener('drop', function(e) {
-            e.preventDefault();
-            dropZone.classList.remove('active');
+        
+        function updateStats() {
+            fileCountElement.textContent = referenceFile ? '1' : '0';
+            contractCountElement.textContent = contractsToProcess.length;
+        }
+        
+        // Toggle field sections based on checkbox selection
+        function toggleFieldSections() {
+            document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
+                const field = checkbox.dataset.field;
+                const section = document.getElementById(`section_${field}`);
+                
+                if (section) {
+                    if (checkbox.checked) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                }
+            });
             
-            const files = Array.from(e.dataTransfer.files);
-            const docxFiles = files.filter(file => file.name.endsWith('.docx'));
-            
-            if (docxFiles.length !== files.length) {
-                showMessage('فقط فایل‌های .docx مجاز هستند.', 'error');
-                setTimeout(hideMessage, 4000);
-            }
-            
-            uploadedFiles = uploadedFiles.concat(docxFiles);
-            updateFileList();
-            processBtn.disabled = uploadedFiles.length === 0;
-        });
-
-        contractTypeSelect.addEventListener('change', function() {
-            if (this.value === 'annual') {
-                annualInputsDiv.classList.remove('hidden');
+            // Special handling for contract dates
+            const datesChecked = document.getElementById('chk_contract_dates').checked;
+            if (datesChecked) {
+                document.getElementById('section_contract_dates').classList.add('active');
             } else {
-                annualInputsDiv.classList.add('hidden');
+                document.getElementById('section_contract_dates').classList.remove('active');
             }
+        }
+        
+        // ==================== AI-Powered Extraction Logic ====================
+        async function extractDataFromFile(file) {
+            showMessage('در حال تحلیل هوشمند قرارداد...', 'processing');
+            try {
+                const buffer = await file.arrayBuffer();
+                const zip = await JSZip.loadAsync(buffer);
+                const doc = zip.file("word/document.xml");
+                if (!doc) throw new Error("فایل Word نامعتبر است.");
+                originalContent = await doc.async("string");
+                
+                const cleanTextContent = originalContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+                const structuralContent = originalContent.replace(/(\r\n|\n|\r)/gm," ");
+                
+                const cleanValue = (value) => {
+                    if (!value) return '';
+                    let cleaned = value.replace(/<[^>]+>/g, ' ');
+                    cleaned = cleaned.replace(/\s+/g, ' ').trim();
+                    cleaned = cleaned.replace(/\s*\/\s*/g, '/');
+                    return cleaned;
+                };
+                
+                originalValues = {};
+                for (const key in FIELD_DEFINITIONS) {
+                    if (key === 'dates') continue;
+                    let patternToUse = FIELD_DEFINITIONS[key][0];
+                    let contentToSearch = (key === 'guarantee_amount') ? cleanTextContent : structuralContent;
+                    const match = contentToSearch.match(patternToUse);
+                    if (match && match[1]) {
+                        originalValues[key] = cleanValue(match[1]);
+                    }
+                }
+                
+                const dateMatch = cleanTextContent.match(FIELD_DEFINITIONS.dates[0]);
+                if (dateMatch && dateMatch[1] && dateMatch[2]) {
+                    originalValues.contract_start_date = cleanValue(dateMatch[1]);
+                    originalValues.contract_end_date = cleanValue(dateMatch[2]);
+                }
+                
+                // Populate the form with extracted values
+                contractForm.reset();
+                for (const key in originalValues) {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = originalValues[key] || '';
+                    }
+                }
+                
+                showMessage('تحلیل با موفقیت انجام شد. مقادیر شناسایی‌شده در فرم قرار گرفت.', 'success');
+                addToListBtn.disabled = false;
+                updateStats();
+            } catch (error) {
+                showMessage(`خطا در تحلیل فایل: ${error.message}`, 'error');
+                console.error(error);
+                addToListBtn.disabled = true;
+            }
+        }
+        
+        // ==================== Event Listeners ====================
+        function handleFileSelect(file) {
+            if (file && file.name.endsWith('.docx')) {
+                referenceFile = file;
+                fileNameElement.textContent = `فایل مرجع: ${file.name}`;
+                dropZone.classList.add('active');
+                extractDataFromFile(file);
+            } else {
+                showMessage('خطا: لطفاً یک فایل .docx معتبر انتخاب کنید.', 'error');
+            }
+        }
+        
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
+        dropZone.addEventListener('dragover', (e) => { 
+            e.preventDefault(); 
+            dropZone.classList.add('active'); 
         });
-
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('active');
+            handleFileSelect(e.dataTransfer.files[0]);
+        });
+        
+        // Add event listeners to checkboxes
+        document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', toggleFieldSections);
+        });
+        
+        contractForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get selected fields
+            const selectedFields = [];
+            document.querySelectorAll('.field-checkbox input[type="checkbox"]:checked').forEach(checkbox => {
+                selectedFields.push(checkbox.dataset.field);
+            });
+            
+            if (selectedFields.length === 0) {
+                showMessage('لطفاً حداقل یک فیلد را برای ویرایش انتخاب کنید.', 'error');
+                return;
+            }
+            
+            const newValues = {};
+            const formInputs = document.querySelectorAll('#contractForm [data-key]');
+            
+            formInputs.forEach(input => {
+                const key = input.dataset.key;
+                // Only include values for selected fields
+                if (selectedFields.includes(key) || 
+                    (selectedFields.includes('contract_dates') && (key === 'contract_start_date' || key === 'contract_end_date'))) {
+                    newValues[key] = input.value.trim();
+                }
+            });
+            
+            // Always include owner_full_name for identification, even if not selected
+            if (!newValues.owner_full_name && originalValues.owner_full_name) {
+                newValues.owner_full_name = originalValues.owner_full_name;
+            }
+            
+            if (!newValues.owner_full_name) {
+                showMessage('لطفاً نام مالک را برای شناسایی قرارداد وارد کنید.', 'error');
+                return;
+            }
+            
+            contractsToProcess.push({ newValues, selectedFields });
+            updateContractList();
+            showMessage(`قرارداد برای "${newValues.owner_full_name}" به صف ساخت اضافه شد.`, 'success');
+            
+            // Clear form after adding
+            contractForm.reset();
+        });
+        
+        clearFormBtn.addEventListener('click', function() {
+            contractForm.reset();
+            showMessage('فرم پاک شد.', 'success');
+        });
+        
+        fillSampleBtn.addEventListener('click', function() {
+            // Check all checkboxes first
+            document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            toggleFieldSections();
+            
+            // Fill sample data
+            document.getElementById('owner_full_name').value = 'علی محمدی';
+            document.getElementById('owner_father_name').value = 'حسین';
+            document.getElementById('owner_national_id').value = '1234567890';
+            document.getElementById('owner_mobile').value = '09123456789';
+            document.getElementById('owner_address').value = 'تهران، خیابان ولیعصر، پلاک 123';
+            document.getElementById('contract_start_date').value = '1402/01/01';
+            document.getElementById('contract_end_date').value = '1403/01/01';
+            document.getElementById('guarantee_amount').value = '10,000,000';
+            showMessage('فرم با اطلاعات نمونه پر شد.', 'success');
+        });
+        
         // ==================== Main Processing Logic ====================
         processBtn.addEventListener('click', async function() {
-            if (uploadedFiles.length === 0) {
-                showMessage('لطفاً فایل‌ها را آپلود کنید.', 'error');
-                setTimeout(hideMessage, 3000);
+            if (contractsToProcess.length === 0) {
+                showMessage('هیچ قراردادی برای ساخت در صف وجود ندارد.', 'error');
                 return;
             }
-
-            const newStartDateStr = document.getElementById('newStartDate').value.trim();
-            const newEndDateStr = document.getElementById('newEndDate').value.trim();
-
-            if (!newStartDateStr || !newEndDateStr) {
-                showMessage('لطفاً هر دو تاریخ شروع و پایان را وارد کنید.', 'error');
-                setTimeout(hideMessage, 3000);
-                return;
-            }
-
-            // Basic validation for Persian date format
-            const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
-            if (!dateRegex.test(newStartDateStr) || !dateRegex.test(newEndDateStr)) {
-                showMessage('فرمت تاریخ باید YYYY/MM/DD باشد (مثال: 1403/01/01).', 'error');
-                setTimeout(hideMessage, 4000);
-                return;
-            }
-
-            const contractType = contractTypeSelect.value;
-            let additionalData = {};
-            if (contractType === 'annual') {
-                additionalData.newBankName = document.getElementById('newBankName').value.trim();
-                additionalData.newDriverAmount = document.getElementById('newDriverAmount').value.trim();
-                additionalData.newCompanyAddress = document.getElementById('newCompanyAddress').value.trim();
-                additionalData.newBillAmount = document.getElementById('newBillAmount').value.trim();
-
-                if (!additionalData.newBankName || !additionalData.newDriverAmount ||
-                    !additionalData.newCompanyAddress || !additionalData.newBillAmount) {
-                    showMessage('لطفاً تمام اطلاعات سالیانه را وارد کنید.', 'error');
-                    setTimeout(hideMessage, 3000);
-                    return;
-                }
-            }
-
-            // Reset processed files array
-            processedFiles = [];
+            
+            showMessage('در حال ساخت گروهی قراردادها...', 'processing');
             progressContainer.style.display = 'block';
-            showMessage('در حال پردازش فایل‌ها...', 'processing');
-            downloadAllBtn.disabled = true;
-            processBtn.disabled = true;
-
+            updateProgress(0);
+            this.disabled = true;
+            addToListBtn.disabled = true;
+            clearFormBtn.disabled = true;
+            fillSampleBtn.disabled = true;
+            
+            const finalZip = new JSZip();
+            let processedCount = 0;
+            
             try {
-                const totalFiles = uploadedFiles.length;
-                for (let i = 0; i < totalFiles; i++) {
-                    const file = uploadedFiles[i];
-                    const arrayBuffer = await file.arrayBuffer();
-                    const zip = new JSZip();
-                    const zipContent = await zip.loadAsync(arrayBuffer);
-
-                    // Load the document content as text to perform replacements
-                    const documentXml = zipContent.files['word/document.xml'];
-                    if (!documentXml) {
-                        throw new Error('فایل Word نامعتبر است - document.xml یافت نشد');
-                    }
+                for (let i = 0; i < contractsToProcess.length; i++) {
+                    const contract = contractsToProcess[i];
+                    let processedContent = originalContent;
                     
-                    let contentStr = await documentXml.async('text');
-
-                    // --- Perform Date Replacements ---
-                    // Function to format date for the specific document style (e.g., 01 0 4 / 14 0 4)
-                    function formatDateForDoc(dateStr) {
-                        const parts = dateStr.split("/");
-                        if (parts.length !== 3) return dateStr;
-                        const [y, m, d] = parts;
-                        // Format as "dd d / d m / m yy y y" with spaces
-                        return `${d[0]} ${d[1]} / ${m[0]} ${m[1]} / ${y[0]}${y[1]} ${y[2]} ${y[3]}`;
-                    }
-
-                    const newStartDocFormat = formatDateForDoc(newStartDateStr);
-                    const newEndDocFormat = formatDateForDoc(newEndDateStr);
-
-                    // --- 1. Replace dates in the header (e.g., تاریخ: 01 / 0 4 / 140 4) ---
-                    // Pattern: تاریخ: followed by the old date format
-                    const headerDatePattern = /(تاریخ\s*:\s*)(\d)\s*(\d)\s*\/\s*(\d)\s*(\d)\s*\/\s*(\d)(\d)\s*(\d)\s*(\d)/g;
-                    const potentialHeaderDates = [...contentStr.matchAll(headerDatePattern)];
-                    
-                    if (potentialHeaderDates.length > 0) {
-                        // Replace the first header date found (assuming there's only one)
-                        const firstHeaderMatch = potentialHeaderDates[0];
-                        const fullMatch = firstHeaderMatch[0]; // e.g., "تاریخ: 01 / 0 4 / 140 4"
-                        const prefix = firstHeaderMatch[1]; // e.g., "تاریخ: "
-                        const oldDatePart = firstHeaderMatch.slice(2).join(''); // e.g., "01041404"
-                        // Reconstruct the replacement with the new date in the same format
-                        contentStr = contentStr.replace(fullMatch, `${prefix}${newStartDocFormat}`);
-                    } else {
-                        // Fallback: if the structured pattern doesn't work, try a simpler replacement for the start date in header
-                        // This is less precise but might catch it if the format is slightly different
-                         contentStr = contentStr.replace(/(تاریخ\s*:)[\s\d\/]*/g, `$1 ${newStartDocFormat}`);
-                    }
-
-                    // --- 2. Replace dates in the contract body (MADDE 3) ---
-                    // Pattern: "از تاريخ" followed by the start date, then "تا" followed by the end date
-                    // This is more complex, so we'll target the specific structure around MADDE 3
-                    // Find the section containing the dates in MADDE 3
-                    const madde3Pattern = /(از\s*تاريخ\s*)(\d)\s*(\d)\s*\/\s*(\d)\s*(\d)\s*\/\s*(\d)(\d)\s*(\d)\s*(\d)(\s*تا\s*)(\d)\s*(\d)\s*\/\s*(\d)\s*(\d)\s*\/\s*(\d)(\d)\s*(\d)\s*(\d)/g;
-                    const potentialMadde3Dates = [...contentStr.matchAll(madde3Pattern)];
-                    
-                    if (potentialMadde3Dates.length > 0) {
-                        // Replace the first occurrence (assuming MADDE 3 is unique)
-                        const firstMadde3Match = potentialMadde3Dates[0];
-                        const fullMatch = firstMadde3Match[0]; // e.g., "از تاريخ 01 / 0 4 / 140 4 تا 31 / 0 6 / 14 0 4"
-                        const prefix = firstMadde3Match[1]; // e.g., "از تاريخ "
-                        const suffix = firstMadde3Match[10]; // e.g., " تا "
-                        // Reconstruct with new dates
-                        contentStr = contentStr.replace(fullMatch, `${prefix}${newStartDocFormat}${suffix}${newEndDocFormat}`);
-                    } else {
-                        // Fallback: try replacing the specific example dates if they exist in the body
-                        contentStr = contentStr.replace(/(از\s*تاريخ\s*)(01\s*\/\s*0\s*4\s*\/\s*14\s*0\s*4)/, `$1${newStartDocFormat}`);
-                        contentStr = contentStr.replace(/(تا\s*)(31\s*\/\s*0\s*6\s*\/\s*14\s*0\s*4)/, `$1${newEndDocFormat}`);
-                    }
-
-                    // --- Perform Annual Replacements if needed ---
-                    if (contractType === 'annual') {
-                        // Replace Driver Amount (example from sample: 291456 ریال)
-                        const amountRegex = /(\d{3}\/\d{3}\/\d{3}\/\d+)\s*ریال/;
-                        if (contentStr.match(amountRegex)) {
-                            contentStr = contentStr.replace(amountRegex, `${additionalData.newDriverAmount} ریال`);
-                        }
-
-                        // Replace Bank Name (example from sample: ملی)
-                        // Target the specific context "نزد بانک"
-                        const bankContextPattern = /(نزد\s*بانک\s*:\s*)([^<>\n\r\f\v]{0,20}ملی[^<>\n\r\f\v]{0,20})/g;
-                        contentStr = contentStr.replace(bankContextPattern, `$1${additionalData.newBankName}`);
-
-                        // Replace Company Address (example from sample: اصفهلان خیابان حیکم فرزانه خ شهدای دستگرد کوی اول پلاک21)
-                        const oldAddress = "اصفهلان خیابان حیکم فرزانه خ شهدای دستگرد کوی اول پلاک21";
-                        const addressPattern = new RegExp(oldAddress.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-                        contentStr = contentStr.replace(addressPattern, additionalData.newCompanyAddress);
-
-                        // Replace Bill Amount (example from sample: 000/000/ 000/ 1 ریال)
-                        const billRegex = /000\/000\/\s*000\/\s*1\s*ریال/;
-                        if (contentStr.match(billRegex)) {
-                            contentStr = contentStr.replace(billRegex, `${additionalData.newBillAmount} ریال`);
+                    // Replace only the selected fields
+                    for (const key in contract.newValues) {
+                        const oldValue = originalValues[key];
+                        const newValue = contract.newValues[key];
+                        
+                        // Only replace if the field was selected and values are different
+                        if (oldValue && newValue && oldValue !== newValue) {
+                            // Escape special regex characters in oldValue
+                            const escapedOldValue = oldValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            const regex = new RegExp(escapedOldValue, 'g');
+                            processedContent = processedContent.replace(regex, newValue);
                         }
                     }
-
-                    // Update the content in the zip
-                    zipContent.file('word/document.xml', contentStr);
-
-                    // Generate the new docx blob
-                    const out = await zipContent.generateAsync({ type: "blob" });
-
-                    // Create new filename
-                    const newName = file.name.replace('.docx', '_ویرایش_شده.docx');
-                    processedFiles.push({ name: newName, blob: out });
-
-                    // Update progress
-                    const progressPercent = ((i + 1) / totalFiles) * 100;
-                    updateProgress(progressPercent);
+                    
+                    const tempZip = await JSZip.loadAsync(await referenceFile.arrayBuffer());
+                    tempZip.file("word/document.xml", processedContent);
+                    const outputBlob = await tempZip.generateAsync({ type: "blob" });
+                    finalZip.file(`قرارداد-${contract.newValues.owner_full_name || 'نامشخص'}.docx`, outputBlob);
+                    
+                    processedCount++;
+                    processedCountElement.textContent = processedCount;
+                    updateProgress(((i + 1) / contractsToProcess.length) * 100);
                 }
-
-                showMessage(`✅ پردازش ${processedFiles.length} فایل با موفقیت انجام شد.`, 'success');
-                downloadAllBtn.disabled = false;
+                
+                const zipBlob = await finalZip.generateAsync({ type: "blob" });
+                saveAs(zipBlob, "قراردادهای_ساخته_شده.zip");
+                showMessage(`✅ ${contractsToProcess.length} قرارداد با موفقیت ساخته و دانلود شد.`, 'success');
+                
+                // Clear the list after processing
+                contractsToProcess = [];
+                updateContractList();
             } catch (error) {
-                console.error("Processing error:", error);
-                showMessage(`❌ خطای پردازش: ${error.message}`, 'error');
+                showMessage(`❌ خطای جدی در ساخت فایل‌ها: ${error.message}`, 'error');
+                console.error(error);
             } finally {
-                processBtn.disabled = false;
-                setTimeout(() => {
-                    // progressContainer.style.display = 'none'; // Keep progress visible after completion
-                }, 1500);
+                this.disabled = false;
+                addToListBtn.disabled = false;
+                clearFormBtn.disabled = false;
+                fillSampleBtn.disabled = false;
             }
         });
-
-        downloadAllBtn.addEventListener('click', function() {
-            if (processedFiles.length === 0) {
-                showMessage('هیچ فایلی برای دانلود وجود ندارد.', 'error');
-                setTimeout(hideMessage, 3000);
-                return;
-            }
-
-            showMessage('📦 در حال ایجاد فایل ZIP...', 'processing');
-
-            try {
-                const zip = new JSZip();
-                processedFiles.forEach(fileObj => {
-                    zip.file(fileObj.name, fileObj.blob);
-                });
-
-                zip.generateAsync({ type: "blob" }).then(function(content) {
-                    saveAs(content, "قراردادهای_ویرایش_شده.zip");
-                    showMessage('📥 فایل ZIP با موفقیت دانلود شد.', 'success');
-                    setTimeout(hideMessage, 4000);
-                }).catch(function(err) {
-                    console.error("ZIP Generation Error:", err);
-                    showMessage(`❌ خطای ایجاد ZIP: ${err.message}`, 'error');
-                    setTimeout(hideMessage, 4000);
-                });
-            } catch (error) {
-                console.error("Download All Error:", error);
-                showMessage(`❌ خطای آماده‌سازی دانلود: ${error.message}`, 'error');
-                setTimeout(hideMessage, 4000);
-            }
-        });
-
-        // Initialize
-        updateFileList();
     </script>
 </body>
 </html>
