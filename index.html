@@ -3,1053 +3,1314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دستیار قرارداد با هوش مصنوعی واقعی</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <title>وکال‌اپ - پلتفرم مشاوره حقوقی</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         :root {
-            --primary-color: #1d3557;
-            --secondary-color: #457b9d;
-            --accent-color: #e63946;
-            --light-bg: #f1faee;
-            --dark-text: #212529;
-            --border-color: #a8dadc;
-            --success-color: #2a9d8f;
-            --warning-color: #f4a261;
-            --error-color: #e76f51;
-            --info-color: #219ebc;
-            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, #14213d 100%);
-            --gradient-secondary: linear-gradient(90deg, var(--secondary-color), var(--info-color));
-            --gradient-accent: linear-gradient(90deg, var(--accent-color), #ff6b6b);
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --danger-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --card-background: #FFFFFF;
+            --text-primary: #1C1C1E;
+            --text-secondary: #8E8E93;
+            --border-color: #E5E5EA;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --border-radius: 12px;
         }
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
+
         body {
-            font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
-            background: linear-gradient(to bottom, #e0f7fa, #bbdefb);
-            color: var(--dark-text);
-            line-height: 1.7;
-            padding: 20px;
-            min-height: 100vh;
+            background: var(--background-color);
+            color: var(--text-primary);
+            direction: rtl;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         .container {
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-        header {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 50px 30px;
-            text-align: center;
-            border-bottom: 6px solid var(--accent-color);
-            position: relative;
-            overflow: hidden;
-        }
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(30deg);
-        }
-        header h1 { 
-            font-size: 3rem; 
-            margin-bottom: 10px; 
-            font-weight: 700; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); 
-            position: relative;
-            z-index: 2;
-        }
-        header p { 
-            font-size: 1.3rem; 
-            opacity: 0.9; 
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 30px;
-            padding: 30px;
-        }
-        @media (max-width: 1200px) { 
-            .main-content { 
-                grid-template-columns: 1fr; 
-            } 
-        }
-        .panel {
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            transition: var(--transition);
-        }
-        .panel:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-            transform: translateY(-5px);
-        }
-        .panel h2 {
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 4px solid var(--secondary-color);
-            font-size: 1.8rem;
+            margin-bottom: 20px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-        .panel h2 i {
-            margin-left: 15px;
-            font-size: 1.8rem;
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
         }
-        .form-group { 
-            margin-bottom: 22px; 
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
         }
-        label {
+
+        .nav-tab {
+            padding: 10px 20px;
+            border: none;
+            background: var(--background-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Panel */
+        .panel {
+            display: none;
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1.1rem;
+            color: var(--text-primary);
         }
-        input, textarea, select {
+
+        .form-input, .form-select, .form-textarea {
             width: 100%;
-            padding: 15px 18px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 1.05rem;
-            transition: var(--transition);
-            background-color: #f8f9fa;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: border-color 0.3s ease;
         }
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--secondary-color);
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
-            box-shadow: 0 0 0 4px rgba(69, 123, 157, 0.25);
-            background-color: white;
+            border-color: var(--primary-color);
         }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
         .btn {
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 15px 35px; 
-            background: var(--gradient-secondary); 
-            color: white;
-            border: none; 
-            border-radius: 12px; 
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 1.2rem; 
-            font-weight: 700; 
-            transition: var(--transition);
-            margin: 5px; 
-            text-decoration: none; 
-            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
-            min-width: 200px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
-        .btn:hover:not(:disabled) {
-            background: var(--gradient-primary);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
         }
-        .btn:disabled { 
-            background: #ced4da; 
-            cursor: not-allowed; 
-            box-shadow: none; 
-            transform: none;
+
+        .btn-primary:hover {
+            background: #0056CC;
         }
-        .btn-accent { 
-            background: var(--gradient-accent); 
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
         }
-        .btn-accent:hover:not(:disabled) { 
-            background: linear-gradient(90deg, #c91c28, #ff4b4b);
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
         }
-        .btn-success { 
-            background: var(--gradient-secondary); 
-        }
-        .btn-success:hover:not(:disabled) { 
-            background: linear-gradient(90deg, #218a7d, #3bb09d);
-        }
+
         .btn-warning {
-            background: var(--gradient-accent);
+            background: var(--warning-color);
+            color: white;
         }
-        .btn-warning:hover:not(:disabled) {
-            background: linear-gradient(90deg, #e76f51, #f4a261);
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
         }
-        .file-upload-wrapper {
-            position: relative; 
-            padding: 50px; 
-            border: 3px dashed var(--border-color);
-            border-radius: 20px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: var(--transition);
-            background-color: var(--light-bg);
-            min-height: 200px;
+
+        /* Cards */
+        .card {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Chat */
+        .chat-container {
+            height: 400px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background: #F8F9FA;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+
+        .chat-message.sent {
+            background: var(--primary-color);
+            color: white;
+            margin-left: auto;
+        }
+
+        .chat-message.received {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background: var(--card-background);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+
+        .chat-input button {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* Calendar */
+        .calendar {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
         }
-        .file-upload-wrapper:hover, .file-upload-wrapper.active {
-            border-color: var(--secondary-color);
-            transform: scale(1.02);
-            background: #eaf7f7;
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
         }
-        #fileInput { 
-            display: none; 
+
+        .calendar-day {
+            padding: 10px;
+            text-align: center;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-        #fileName { 
-            margin-top: 15px; 
-            color: var(--success-color); 
-            font-weight: 600; 
-            font-size: 1.2rem; 
+
+        .calendar-day:hover {
+            background: var(--background-color);
         }
-        .file-list { 
-            margin-top: 20px; 
-            max-height: 300px; 
-            overflow-y: auto; 
-            border: 1px solid #ddd; 
-            border-radius: 10px; 
-            padding: 10px; 
-            background: #f8f9fa; 
+
+        .calendar-day.selected {
+            background: var(--primary-color);
+            color: white;
         }
-        .file-item { 
-            padding: 14px; 
-            border-bottom: 1px solid #e9ecef; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            transition: background-color 0.2s; 
+
+        .calendar-day.available {
+            background: var(--success-color);
+            color: white;
         }
-        .file-item:last-child { 
-            border-bottom: none; 
+
+        /* Time Slots */
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
         }
-        .file-item:hover { 
-            background-color: #e9ecef; 
+
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .file-remove { 
-            color: var(--accent-color); 
-            cursor: pointer; 
-            font-size: 1.6rem; 
-            font-weight: bold; 
-            transition: var(--transition);
+
+        .time-slot:hover {
+            background: var(--background-color);
         }
-        .file-remove:hover {
-            transform: scale(1.2);
+
+        .time-slot.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
-        .progress-container { 
-            margin-top: 25px; 
-            display: none; 
+
+        .time-slot.booked {
+            background: var(--text-secondary);
+            color: white;
+            cursor: not-allowed;
         }
-        .progress-bar { 
-            height: 30px; 
-            background: #e9ecef; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            position: relative; 
+
+        /* Status Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
         }
-        .progress-fill { 
-            height: 100%; 
-            background: var(--gradient-secondary); 
-            width: 0%; 
-            transition: width 0.5s ease; 
+
+        .badge-success {
+            background: var(--success-color);
+            color: white;
         }
-        .progress-text { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            font-weight: bold; 
-            font-size: 1.1rem; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.4); 
+
+        .badge-warning {
+            background: var(--warning-color);
+            color: white;
         }
-        .status-message { 
-            margin-top: 20px; 
-            padding: 20px; 
-            border-radius: 12px; 
-            text-align: center; 
-            font-weight: 500; 
-            font-size: 1.2rem; 
-            display: none; 
-            animation: fadeIn 0.5s ease; 
-            position: relative;
-            overflow: hidden;
+
+        .badge-danger {
+            background: var(--danger-color);
+            color: white;
         }
-        .status-message::before {
-            content: "";
-            position: absolute;
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%);
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
         }
-        .status-message.processing::before {
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes fadeIn { 
-            from { 
-                opacity: 0; 
-                transform: translateY(10px); 
-            } 
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            } 
-        }
-        @keyframes shimmer {
-            100% {
-                transform: translateX(100%);
-            }
-        }
-        .status-message.success { 
-            background: #e6fffa; 
-            color: #047857; 
-            border: 2px solid #6ee7b7; 
-            display: block; 
-        }
-        .status-message.error { 
-            background: #fee2e2; 
-            color: #b91c1c; 
-            border: 2px solid #fca5a5; 
-            display: block; 
-        }
-        .status-message.processing { 
-            background: #fef9c3; 
-            color: #a16207; 
-            border: 2px solid #fde047; 
-            display: block; 
-        }
-        .input-group { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 25px; 
-        }
-        @media (max-width: 600px) { 
-            .input-group { 
-                grid-template-columns: 1fr; 
-                gap: 0; 
-            } 
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--primary-color);
-            color: white;
-            font-size: 1rem;
-        }
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-        .feature-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
-        .feature-list li i {
-            margin-left: 10px;
-            color: var(--success-color);
-        }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        .stat-item {
-            text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            flex: 1;
-            margin: 5px;
-            min-width: 120px;
-        }
-        .stat-item .number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        .stat-item .label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: var(--dark-text);
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
+
+        .modal-content {
             position: absolute;
-            z-index: 1;
-            bottom: 125%;
+            top: 50%;
             left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
+            transform: translate(-50%, -50%);
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-        .action-buttons {
+
+        .modal-header {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
-        .card-title {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
         }
-        .card-title i {
-            margin-left: 10px;
-        }
-        .instructions {
-            background: #e3f2fd;
-            border-right: 4px solid var(--info-color);
-            padding: 15px;
-            border-radius: 0 10px 10px 0;
-            margin: 20px 0;
-        }
-        .instructions h3 {
-            margin-top: 0;
-            color: var(--info-color);
-        }
-        .instructions ul {
-            padding-right: 20px;
-        }
-        .instructions li {
-            margin-bottom: 10px;
-        }
-        /* Checkbox styling for selective fields */
-        .field-checkbox {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            transition: background-color 0.3s;
-        }
-        .field-checkbox:hover {
-            background-color: #e9ecef;
-        }
-        .field-checkbox input[type="checkbox"] {
-            width: auto;
-            margin-left: 10px;
-            transform: scale(1.3);
-        }
-        .field-checkbox label {
-            margin-bottom: 0;
+
+        .close {
+            font-size: 24px;
             cursor: pointer;
-            font-weight: normal;
+            color: var(--text-secondary);
         }
-        .checkbox-group {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            background-color: #fafafa;
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            color: white;
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
         }
-        .checkbox-group h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
+
+        .notification.show {
+            transform: translateX(0);
         }
-        .checkbox-group h3 i {
-            margin-left: 10px;
+
+        .notification.success {
+            background: var(--success-color);
         }
-        .field-section {
-            display: none;
+
+        .notification.error {
+            background: var(--danger-color);
         }
-        .field-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
+
+        .notification.warning {
+            background: var(--warning-color);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1><i class="fas fa-robot"></i> دستیار هوشمند قرارداد</h1>
-            <p>قراردادهای تکمیل‌شده را آپلود کنید، هوش مصنوعی فیلدها را تشخیص می‌دهد، سپس ویرایش و به صورت گروهی تولید کنید</p>
-        </header>
-        
-        <div class="main-content">
-            <div class="panel">
-                <h2><i class="fas fa-upload"></i> ۱. بارگذاری و تحلیل</h2>
-                <div class="file-upload-wrapper" id="dropZone">
-                    <i class="fas fa-file-word fa-3x" style="color: var(--secondary-color); margin-bottom: 15px;"></i>
-                    <h3>فایل قرارداد مرجع (.docx) را اینجا بکشید</h3>
-                    <p>یا برای انتخاب کلیک کنید</p>
-                    <input type="file" id="fileInput" accept=".docx">
-                    <div id="fileName"></div>
-                </div>
-                
-                <div class="instructions">
-                    <h3><i class="fas fa-info-circle"></i> راهنمای استفاده</h3>
-                    <ul>
-                        <li>فایل قرارداد مرجع خود را در این قسمت آپلود کنید</li>
-                        <li>سیستم به طور خودکار فیلدهای قرارداد را تشخیص می‌دهد</li>
-                        <li>فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید</li>
-                        <li>اطلاعات جدید را وارد کرده و به لیست اضافه کنید</li>
-                        <li>در نهایت تمام قراردادها را به صورت یک فایل ZIP دانلود کنید</li>
-                    </ul>
-                </div>
-                
-                <h2 style="margin-top: 30px;"><i class="fas fa-list"></i> ۲. صف ساخت قراردادها</h2>
-                <div class="file-list" id="contractList">
-                    <p style="text-align: center; color: #666;">قراردادی در صف ساخت نیست.</p>
-                </div>
-                
-                <div class="progress-container" id="progressContainer">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                        <div class="progress-text" id="progressText">0%</div>
-                    </div>
-                </div>
-                
-                <div id="statusMessage" class="status-message"></div>
-                
-                <div style="text-align: center; margin-top: 25px;">
-                    <button id="processBtn" class="btn btn-success" disabled>
-                        <i class="fas fa-download"></i> ساخت همه قراردادها و دانلود (ZIP)
-                    </button>
-                </div>
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-balance-scale"></i>
+                وکال‌اپ
             </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showPanel('client')">
+                    <i class="fas fa-user"></i>
+                    موکل
+                </button>
+                <button class="nav-tab" onclick="showPanel('lawyer')">
+                    <i class="fas fa-gavel"></i>
+                    وکیل
+                </button>
+                <button class="nav-tab" onclick="showPanel('admin')">
+                    <i class="fas fa-cog"></i>
+                    مدیر
+                </button>
+            </div>
+        </div>
+
+        <!-- Client Panel -->
+        <div id="client-panel" class="panel active">
+            <h2><i class="fas fa-user"></i> پنل موکل</h2>
             
-            <div class="panel">
-                <h2><i class="fas fa-edit"></i> ۳. فرم ویرایش اطلاعات (تشخیص خودکار)</h2>
-                
-                <div class="checkbox-group">
-                    <h3><i class="fas fa-check-square"></i> فیلدهای قابل ویرایش</h3>
-                    <p>فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید:</p>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_full_name" data-field="owner_full_name">
-                        <label for="chk_owner_full_name">نام و نام خانوادگی مالک</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_father_name" data-field="owner_father_name">
-                        <label for="chk_owner_father_name">نام پدر</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_national_id" data-field="owner_national_id">
-                        <label for="chk_owner_national_id">کد ملی مالک</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_mobile" data-field="owner_mobile">
-                        <label for="chk_owner_mobile">شماره موبایل</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_address" data-field="owner_address">
-                        <label for="chk_owner_address">آدرس مالک</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_contract_dates" data-field="contract_dates">
-                        <label for="chk_contract_dates">تاریخ‌های قرارداد</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_guarantee_amount" data-field="guarantee_amount">
-                        <label for="chk_guarantee_amount">مبلغ سفته</label>
+            <!-- Problem Description -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">شرح مشکل حقوقی</div>
+                        <div class="card-subtitle">مشکل خود را به طور کامل شرح دهید</div>
                     </div>
                 </div>
-                
-                <form id="contractForm">
-                    <div id="fieldSections">
-                        <!-- Owner Full Name Section -->
-                        <div class="field-section" id="section_owner_full_name">
-                            <div class="form-group">
-                                <label for="owner_full_name">نام و نام خانوادگی مالک</label>
-                                <input type="text" id="owner_full_name" data-key="owner_full_name">
-                            </div>
+                <form id="problem-form">
+                    <div class="form-group">
+                        <label class="form-label">نوع مشکل حقوقی</label>
+                        <select class="form-select" id="problem-type" required>
+                            <option value="">انتخاب کنید</option>
+                            <option value="family">خانواده و طلاق</option>
+                            <option value="civil">حقوق مدنی</option>
+                            <option value="commercial">حقوق تجارت</option>
+                            <option value="criminal">کیفری</option>
+                            <option value="labor">کار و تامین اجتماعی</option>
+                            <option value="property">املاک و مستغلات</option>
+                            <option value="contract">قراردادها</option>
+                            <option value="other">سایر</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">شرح کامل مشکل</label>
+                        <textarea class="form-textarea" id="problem-description" placeholder="مشکل خود را به طور کامل شرح دهید..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">شماره تماس</label>
+                        <input type="tel" class="form-input" id="client-phone" placeholder="09123456789" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        یافتن وکیل مناسب
+                    </button>
+                </form>
+            </div>
+
+            <!-- AI Recommendations -->
+            <div id="ai-recommendations" class="card" style="display: none;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">پیشنهادات هوش مصنوعی</div>
+                        <div class="card-subtitle">وکلا بر اساس مشکل شما پیشنهاد شده‌اند</div>
+                    </div>
+                </div>
+                <div id="lawyers-list"></div>
+            </div>
+
+            <!-- Appointments -->
+            <div id="client-appointments" class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">نوبت‌های من</div>
+                        <div class="card-subtitle">لیست نوبت‌های رزرو شده</div>
+                    </div>
+                </div>
+                <div id="appointments-list"></div>
+            </div>
+        </div>
+
+        <!-- Lawyer Panel -->
+        <div id="lawyer-panel" class="panel">
+            <h2><i class="fas fa-gavel"></i> پنل وکیل</h2>
+            
+            <!-- Lawyer Profile -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">پروفایل وکیل</div>
+                        <div class="card-subtitle">اطلاعات و تخصص‌های شما</div>
+                    </div>
+                </div>
+                <form id="lawyer-profile-form">
+                    <div class="grid">
+                        <div class="form-group">
+                            <label class="form-label">نام و نام خانوادگی</label>
+                            <input type="text" class="form-input" id="lawyer-name" value="دکتر احمد محمدی" required>
                         </div>
-                        
-                        <!-- Owner Father Name Section -->
-                        <div class="field-section" id="section_owner_father_name">
-                            <div class="form-group">
-                                <label for="owner_father_name">نام پدر</label>
-                                <input type="text" id="owner_father_name" data-key="owner_father_name">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner National ID Section -->
-                        <div class="field-section" id="section_owner_national_id">
-                            <div class="form-group">
-                                <label for="owner_national_id">کد ملی مالک</label>
-                                <input type="text" id="owner_national_id" data-key="owner_national_id">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner Mobile Section -->
-                        <div class="field-section" id="section_owner_mobile">
-                            <div class="form-group">
-                                <label for="owner_mobile">شماره موبایل</label>
-                                <input type="text" id="owner_mobile" data-key="owner_mobile">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner Address Section -->
-                        <div class="field-section" id="section_owner_address">
-                            <div class="form-group">
-                                <label for="owner_address">آدرس مالک</label>
-                                <textarea id="owner_address" data-key="owner_address" rows="2"></textarea>
-                            </div>
-                        </div>
-                        
-                        <!-- Contract Dates Section -->
-                        <div class="field-section" id="section_contract_dates">
-                            <div class="input-group">
-                                <div class="form-group">
-                                    <label for="contract_start_date">تاریخ شروع قرارداد</label>
-                                    <input type="text" id="contract_start_date" data-key="contract_start_date" placeholder="YYYY/MM/DD">
-                                </div>
-                                <div class="form-group">
-                                    <label for="contract_end_date">تاریخ پایان قرارداد</label>
-                                    <input type="text" id="contract_end_date" data-key="contract_end_date" placeholder="YYYY/MM/DD">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Guarantee Amount Section -->
-                        <div class="field-section" id="section_guarantee_amount">
-                            <div class="form-group">
-                                <label for="guarantee_amount">مبلغ سفته</label>
-                                <input type="text" id="guarantee_amount" data-key="guarantee_amount">
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">شماره پروانه وکالت</label>
+                            <input type="text" class="form-input" id="lawyer-license" value="12345" required>
                         </div>
                     </div>
-                    
-                    <div style="text-align: center; margin-top: 30px;">
-                        <button type="submit" id="addToListBtn" class="btn btn-accent" disabled>
-                            <i class="fas fa-plus"></i> افزودن به صف ساخت
+                    <div class="form-group">
+                        <label class="form-label">تخصص‌ها</label>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" value="family" checked> خانواده
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" value="civil" checked> حقوق مدنی
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" value="commercial"> حقوق تجارت
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 5px;">
+                                <input type="checkbox" value="criminal"> کیفری
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">توضیحات</label>
+                        <textarea class="form-textarea" id="lawyer-description" placeholder="توضیحات درباره تجربیات و تخصص‌های خود...">بیش از ۱۵ سال تجربه در زمینه حقوق خانواده و مدنی</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ذخیره تغییرات</button>
+                </form>
+            </div>
+
+            <!-- Available Times -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">زمان‌های خالی</div>
+                        <div class="card-subtitle">زمان‌های قابل رزرو را مشخص کنید</div>
+                    </div>
+                </div>
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button class="btn btn-secondary" onclick="previousMonth()">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <h3 id="current-month">فروردین ۱۴۰۳</h3>
+                        <button class="btn btn-secondary" onclick="nextMonth()">
+                            <i class="fas fa-chevron-left"></i>
                         </button>
                     </div>
-                </form>
-                
-                <div class="action-buttons">
-                    <button id="clearFormBtn" class="btn btn-warning">
-                        <i class="fas fa-eraser"></i> پاک کردن فرم
-                    </button>
-                    <button id="fillSampleBtn" class="btn">
-                        <i class="fas fa-magic"></i> پر کردن نمونه
+                    <div class="calendar-grid" id="calendar-grid"></div>
+                </div>
+                <div id="time-slots-container" style="display: none;">
+                    <h4>زمان‌های خالی برای تاریخ انتخاب شده:</h4>
+                    <div class="time-slots" id="time-slots"></div>
+                    <button class="btn btn-success" onclick="saveAvailableTimes()">
+                        <i class="fas fa-save"></i>
+                        ذخیره زمان‌ها
                     </button>
                 </div>
             </div>
-        </div>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <div class="number" id="fileCount">0</div>
-                <div class="label">فایل آپلود شده</div>
+
+            <!-- Appointments -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">نوبت‌های رزرو شده</div>
+                        <div class="card-subtitle">لیست نوبت‌های موکلین</div>
+                    </div>
+                </div>
+                <div id="lawyer-appointments-list"></div>
             </div>
-            <div class="stat-item">
-                <div class="number" id="contractCount">0</div>
-                <div class="label">قرارداد در صف</div>
-            </div>
-            <div class="stat-item">
-                <div class="number" id="processedCount">0</div>
-                <div class="label">قرارداد پردازش شده</div>
+
+            <!-- Chat -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">چت با موکلین</div>
+                        <div class="card-subtitle">ارتباط مستقیم با موکلین</div>
+                    </div>
+                </div>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="chat-message received">
+                            سلام، من موکل شما هستم. سوالی در مورد پرونده‌ام دارم.
+                        </div>
+                        <div class="chat-message sent">
+                            سلام، بله در خدمت شما هستم. لطفاً سوال خود را مطرح کنید.
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chat-input" placeholder="پیام خود را بنویسید...">
+                        <button onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="card">
-            <h2 class="card-title"><i class="fas fa-star"></i> ویژگی‌های برجسته</h2>
-            <ul class="feature-list">
-                <li><i class="fas fa-check-circle"></i> تشخیص خودکار فیلدهای قرارداد</li>
-                <li><i class="fas fa-check-circle"></i> انتخاب فیلدهای قابل ویرایش</li>
-                <li><i class="fas fa-check-circle"></i> پردازش گروهی قراردادها</li>
-                <li><i class="fas fa-check-circle"></i> دانلود خروجی به صورت فایل ZIP</li>
-                <li><i class="fas fa-check-circle"></i> رابط کاربری زیبا و کاربرپسند</li>
-                <li><i class="fas fa-check-circle"></i> پشتیبانی از drag & drop</li>
-                <li><i class="fas fa-check-circle"></i> نمایش پیشرفت پردازش</li>
-            </ul>
+
+        <!-- Admin Panel -->
+        <div id="admin-panel" class="panel">
+            <h2><i class="fas fa-cog"></i> پنل مدیر</h2>
+            
+            <!-- Statistics -->
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">آمار کلی</div>
+                            <div class="card-subtitle">وضعیت سیستم</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; color: var(--primary-color); margin-bottom: 10px;">۱۵۰</div>
+                        <div>کل موکلین</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">وکلا</div>
+                            <div class="card-subtitle">تعداد وکلا</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; color: var(--success-color); margin-bottom: 10px;">۲۵</div>
+                        <div>وکیل فعال</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">نوبت‌ها</div>
+                            <div class="card-subtitle">نوبت‌های امروز</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; color: var(--warning-color); margin-bottom: 10px;">۴۵</div>
+                        <div>نوبت امروز</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Management -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">مدیریت سیستم</div>
+                        <div class="card-subtitle">کنترل و نظارت</div>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div>
+                        <h4>مدیریت وکلا</h4>
+                        <div id="lawyers-management"></div>
+                    </div>
+                    <div>
+                        <h4>گزارش‌ها</h4>
+                        <div id="reports"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">فعالیت‌های اخیر</div>
+                        <div class="card-subtitle">آخرین رویدادهای سیستم</div>
+                    </div>
+                </div>
+                <div id="recent-activities"></div>
+            </div>
         </div>
-        
-        <footer>
-            <p>© 2023 دستیار هوشمند قرارداد. تمامی حقوق محفوظ است.</p>
-        </footer>
     </div>
-    
+
+    <!-- Modals -->
+    <div id="appointment-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">رزرو نوبت</div>
+                <span class="close" onclick="closeModal('appointment-modal')">&times;</span>
+            </div>
+            <form id="appointment-form">
+                <div class="form-group">
+                    <label class="form-label">نوع مشاوره</label>
+                    <select class="form-select" id="consultation-type" required>
+                        <option value="chat">چت آنلاین</option>
+                        <option value="video">ویدیو کال</option>
+                        <option value="in-person">حضوری</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">تاریخ و زمان</label>
+                    <input type="datetime-local" class="form-input" id="appointment-datetime" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">توضیحات</label>
+                    <textarea class="form-textarea" id="appointment-notes" placeholder="توضیحات اضافی..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">تایید رزرو</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notification" class="notification"></div>
+
     <script>
-        // ==================== Global Variables ====================
-        let referenceFile = null;
-        let originalContent = '';
-        let originalValues = {};
-        let contractsToProcess = [];
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const fileNameElement = document.getElementById('fileName');
-        const contractForm = document.getElementById('contractForm');
-        const addToListBtn = document.getElementById('addToListBtn');
-        const contractListElement = document.getElementById('contractList');
-        const processBtn = document.getElementById('processBtn');
-        const statusMessage = document.getElementById('statusMessage');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const clearFormBtn = document.getElementById('clearFormBtn');
-        const fillSampleBtn = document.getElementById('fillSampleBtn');
-        const fileCountElement = document.getElementById('fileCount');
-        const contractCountElement = document.getElementById('contractCount');
-        const processedCountElement = document.getElementById('processedCount');
-        
-        // ==================== AI-Powered Field Definitions ====================
-        function createTableAwareRegex(label) {
-            return new RegExp(`<w:t>${label}<\/w:t>.*?<\/w:tc>.*?<w:tc.*?>(.*?)<\/w:tc>`);
-        }
-        
-        const FIELD_DEFINITIONS = {
-            owner_full_name: [createTableAwareRegex('نام و نام خانوادگی:')],
-            owner_father_name: [createTableAwareRegex('نام پدر:')],
-            owner_national_id: [createTableAwareRegex('کد ملی:')],
-            owner_id_number: [createTableAwareRegex('شماره شناسنامه:')],
-            owner_mobile: [createTableAwareRegex('شماره تلفن همراه:')],
-            owner_address: [createTableAwareRegex('نشانی اقامتگاه:')],
-            dates: [/از\s*تاريخ\s*(.*?)\s*تا\s*(.*?)\s*معتبر است/],
-            guarantee_amount: [/یک عدد سفته به مبلغ\s*(.*?)\s*ریال/]
-        };
-        
-        // ==================== Helper Functions ====================
-        function showMessage(text, type) {
-            statusMessage.textContent = text;
-            statusMessage.className = 'status-message ' + type;
-        }
-        
-        function updateContractList() {
-            contractListElement.innerHTML = '';
-            if (contractsToProcess.length === 0) {
-                contractListElement.innerHTML = '<p style="text-align: center; color: #666;">قراردادی در صف ساخت نیست.</p>';
-                processBtn.disabled = true;
-                contractCountElement.textContent = '0';
-                return;
+        // Global variables
+        let currentPanel = 'client';
+        let selectedLawyer = null;
+        let selectedDate = null;
+        let selectedTimeSlots = [];
+        let currentMonth = 0; // 0 = Farvardin, 1 = Ordibehesht, etc.
+        let currentYear = 1403;
+        let appointments = [];
+        let lawyers = [
+            {
+                id: 1,
+                name: "دکتر احمد محمدی",
+                specialties: ["خانواده", "حقوق مدنی"],
+                rating: 4.8,
+                experience: "۱۵ سال",
+                description: "متخصص در زمینه حقوق خانواده و طلاق",
+                available: true
+            },
+            {
+                id: 2,
+                name: "دکتر فاطمه احمدی",
+                specialties: ["کیفری", "حقوق تجارت"],
+                rating: 4.9,
+                experience: "۱۲ سال",
+                description: "وکیل پایه یک دادگستری با تخصص در امور کیفری",
+                available: true
+            },
+            {
+                id: 3,
+                name: "دکتر محسن رضایی",
+                specialties: ["املاک", "قراردادها"],
+                rating: 4.7,
+                experience: "۱۸ سال",
+                description: "متخصص در زمینه حقوق املاک و مستغلات",
+                available: true
             }
-            
-            contractsToProcess.forEach((contract, index) => {
-                const item = document.createElement('div');
-                item.className = 'file-item';
-                item.innerHTML = `
-                    <span>${index + 1}. قرارداد برای: <strong>${contract.newValues.owner_full_name || 'نامشخص'}</strong></span>
-                    <span class="file-remove" data-index="${index}" title="حذف از لیست">×</span>
-                `;
-                contractListElement.appendChild(item);
+        ];
+
+        // Persian calendar months
+        const persianMonths = [
+            "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
+            "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"
+        ];
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            generateCalendar();
+            loadAppointments();
+            loadLawyersManagement();
+            loadReports();
+            loadRecentActivities();
+        }
+
+        // Panel navigation
+        function showPanel(panelName) {
+            // Hide all panels
+            document.querySelectorAll('.panel').forEach(panel => {
+                panel.classList.remove('active');
             });
             
-            document.querySelectorAll('.file-remove').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    contractsToProcess.splice(parseInt(this.dataset.index), 1);
-                    updateContractList();
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected panel
+            document.getElementById(panelName + '-panel').classList.add('active');
+            
+            // Add active class to selected tab
+            event.target.classList.add('active');
+            
+            currentPanel = panelName;
+        }
+
+        // Client panel functions
+        document.getElementById('problem-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const problemType = document.getElementById('problem-type').value;
+            const problemDescription = document.getElementById('problem-description').value;
+            const clientPhone = document.getElementById('client-phone').value;
+            
+            // AI-powered lawyer matching
+            const matchedLawyers = matchLawyers(problemType, problemDescription);
+            displayLawyers(matchedLawyers);
+            
+            showNotification('وکلا بر اساس مشکل شما پیشنهاد شدند', 'success');
+        });
+
+        function matchLawyers(problemType, description) {
+            // Simple AI matching algorithm
+            const keywords = {
+                'family': ['خانواده', 'طلاق', 'مهریه', 'نفقه', 'حضانت'],
+                'civil': ['مدنی', 'مالی', 'ضرر', 'خسارت'],
+                'commercial': ['تجارت', 'شرکت', 'بازرگانی'],
+                'criminal': ['کیفری', 'جرم', 'مجازات'],
+                'labor': ['کار', 'تامین اجتماعی', 'کارگری'],
+                'property': ['املاک', 'مستغلات', 'ملک'],
+                'contract': ['قرارداد', 'عقد', 'پیمان']
+            };
+            
+            const problemKeywords = keywords[problemType] || [];
+            const descriptionWords = description.split(' ');
+            
+            return lawyers.map(lawyer => {
+                let score = 0;
+                lawyer.specialties.forEach(specialty => {
+                    if (problemKeywords.some(keyword => 
+                        specialty.includes(keyword) || descriptionWords.some(word => 
+                            word.includes(keyword)
+                        ))
+                    ) {
+                        score += 2;
+                    }
                 });
-            });
-            
-            processBtn.disabled = false;
-            contractCountElement.textContent = contractsToProcess.length;
-        }
-        
-        function updateProgress(percent) {
-            const roundedPercent = Math.round(percent);
-            progressFill.style.width = percent + '%';
-            progressText.textContent = roundedPercent + '%';
-        }
-        
-        function updateStats() {
-            fileCountElement.textContent = referenceFile ? '1' : '0';
-            contractCountElement.textContent = contractsToProcess.length;
-        }
-        
-        // Toggle field sections based on checkbox selection
-        function toggleFieldSections() {
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-                const field = checkbox.dataset.field;
-                const section = document.getElementById(`section_${field}`);
                 
-                if (section) {
-                    if (checkbox.checked) {
-                        section.classList.add('active');
-                    } else {
-                        section.classList.remove('active');
-                    }
-                }
-            });
-            
-            // Special handling for contract dates
-            const datesChecked = document.getElementById('chk_contract_dates').checked;
-            if (datesChecked) {
-                document.getElementById('section_contract_dates').classList.add('active');
-            } else {
-                document.getElementById('section_contract_dates').classList.remove('active');
-            }
-        }
-        
-        // ==================== AI-Powered Extraction Logic ====================
-        async function extractDataFromFile(file) {
-            showMessage('در حال تحلیل هوشمند قرارداد...', 'processing');
-            try {
-                const buffer = await file.arrayBuffer();
-                const zip = await JSZip.loadAsync(buffer);
-                const doc = zip.file("word/document.xml");
-                if (!doc) throw new Error("فایل Word نامعتبر است.");
-                originalContent = await doc.async("string");
-                
-                const cleanTextContent = originalContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                const structuralContent = originalContent.replace(/(\r\n|\n|\r)/gm," ");
-                
-                const cleanValue = (value) => {
-                    if (!value) return '';
-                    let cleaned = value.replace(/<[^>]+>/g, ' ');
-                    cleaned = cleaned.replace(/\s+/g, ' ').trim();
-                    cleaned = cleaned.replace(/\s*\/\s*/g, '/');
-                    return cleaned;
+                return {
+                    ...lawyer,
+                    matchScore: score
                 };
-                
-                originalValues = {};
-                for (const key in FIELD_DEFINITIONS) {
-                    if (key === 'dates') continue;
-                    let patternToUse = FIELD_DEFINITIONS[key][0];
-                    let contentToSearch = (key === 'guarantee_amount') ? cleanTextContent : structuralContent;
-                    const match = contentToSearch.match(patternToUse);
-                    if (match && match[1]) {
-                        originalValues[key] = cleanValue(match[1]);
-                    }
-                }
-                
-                const dateMatch = cleanTextContent.match(FIELD_DEFINITIONS.dates[0]);
-                if (dateMatch && dateMatch[1] && dateMatch[2]) {
-                    originalValues.contract_start_date = cleanValue(dateMatch[1]);
-                    originalValues.contract_end_date = cleanValue(dateMatch[2]);
-                }
-                
-                // Populate the form with extracted values
-                contractForm.reset();
-                for (const key in originalValues) {
-                    const element = document.getElementById(key);
-                    if (element) {
-                        element.value = originalValues[key] || '';
-                    }
-                }
-                
-                showMessage('تحلیل با موفقیت انجام شد. مقادیر شناسایی‌شده در فرم قرار گرفت.', 'success');
-                addToListBtn.disabled = false;
-                updateStats();
-            } catch (error) {
-                showMessage(`خطا در تحلیل فایل: ${error.message}`, 'error');
-                console.error(error);
-                addToListBtn.disabled = true;
+            }).filter(lawyer => lawyer.matchScore > 0)
+              .sort((a, b) => b.matchScore - a.matchScore);
+        }
+
+        function displayLawyers(matchedLawyers) {
+            const container = document.getElementById('lawyers-list');
+            container.innerHTML = '';
+            
+            matchedLawyers.forEach(lawyer => {
+                const lawyerCard = document.createElement('div');
+                lawyerCard.className = 'card';
+                lawyerCard.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${lawyer.name}</div>
+                            <div class="card-subtitle">
+                                <span class="badge badge-success">${lawyer.rating} ⭐</span>
+                                ${lawyer.experience} تجربه
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="selectLawyer(${lawyer.id})">
+                            <i class="fas fa-calendar-plus"></i>
+                            رزرو نوبت
+                        </button>
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>تخصص‌ها:</strong> ${lawyer.specialties.join('، ')}
+                    </div>
+                    <div style="color: var(--text-secondary);">
+                        ${lawyer.description}
+                    </div>
+                `;
+                container.appendChild(lawyerCard);
+            });
+            
+            document.getElementById('ai-recommendations').style.display = 'block';
+        }
+
+        function selectLawyer(lawyerId) {
+            selectedLawyer = lawyers.find(l => l.id === lawyerId);
+            openModal('appointment-modal');
+        }
+
+        // Appointment booking
+        document.getElementById('appointment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const consultationType = document.getElementById('consultation-type').value;
+            const appointmentDatetime = document.getElementById('appointment-datetime').value;
+            const notes = document.getElementById('appointment-notes').value;
+            
+            const appointment = {
+                id: Date.now(),
+                lawyerId: selectedLawyer.id,
+                lawyerName: selectedLawyer.name,
+                clientPhone: document.getElementById('client-phone').value,
+                consultationType: consultationType,
+                datetime: appointmentDatetime,
+                notes: notes,
+                status: 'confirmed',
+                createdAt: new Date().toISOString()
+            };
+            
+            appointments.push(appointment);
+            saveAppointments();
+            loadAppointments();
+            
+            closeModal('appointment-modal');
+            showNotification('نوبت شما با موفقیت رزرو شد', 'success');
+        });
+
+        // Calendar functions
+        function generateCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const monthDisplay = document.getElementById('current-month');
+            
+            monthDisplay.textContent = `${persianMonths[currentMonth]} ${currentYear}`;
+            
+            grid.innerHTML = '';
+            
+            // Add day headers
+            const days = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
+            days.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day';
+                dayHeader.style.fontWeight = 'bold';
+                dayHeader.textContent = day;
+                grid.appendChild(dayHeader);
+            });
+            
+            // Add calendar days
+            const daysInMonth = 31; // Simplified
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                dayElement.onclick = () => selectDate(day);
+                grid.appendChild(dayElement);
             }
         }
-        
-        // ==================== Event Listeners ====================
-        function handleFileSelect(file) {
-            if (file && file.name.endsWith('.docx')) {
-                referenceFile = file;
-                fileNameElement.textContent = `فایل مرجع: ${file.name}`;
-                dropZone.classList.add('active');
-                extractDataFromFile(file);
+
+        function selectDate(day) {
+            selectedDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            
+            // Remove previous selections
+            document.querySelectorAll('.calendar-day.selected').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            // Add selection to clicked day
+            event.target.classList.add('selected');
+            
+            // Show time slots
+            showTimeSlots();
+        }
+
+        function showTimeSlots() {
+            const container = document.getElementById('time-slots-container');
+            const slotsContainer = document.getElementById('time-slots');
+            
+            container.style.display = 'block';
+            slotsContainer.innerHTML = '';
+            
+            const timeSlots = [
+                '09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'
+            ];
+            
+            timeSlots.forEach(time => {
+                const slot = document.createElement('div');
+                slot.className = 'time-slot';
+                slot.textContent = time;
+                slot.onclick = () => toggleTimeSlot(slot, time);
+                slotsContainer.appendChild(slot);
+            });
+        }
+
+        function toggleTimeSlot(slotElement, time) {
+            if (slotElement.classList.contains('selected')) {
+                slotElement.classList.remove('selected');
+                selectedTimeSlots = selectedTimeSlots.filter(t => t !== time);
             } else {
-                showMessage('خطا: لطفاً یک فایل .docx معتبر انتخاب کنید.', 'error');
+                slotElement.classList.add('selected');
+                selectedTimeSlots.push(time);
             }
         }
-        
-        dropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
-        dropZone.addEventListener('dragover', (e) => { 
-            e.preventDefault(); 
-            dropZone.classList.add('active'); 
-        });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('active');
-            handleFileSelect(e.dataTransfer.files[0]);
-        });
-        
-        // Add event listeners to checkboxes
-        document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', toggleFieldSections);
-        });
-        
-        contractForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get selected fields
-            const selectedFields = [];
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]:checked').forEach(checkbox => {
-                selectedFields.push(checkbox.dataset.field);
-            });
-            
-            if (selectedFields.length === 0) {
-                showMessage('لطفاً حداقل یک فیلد را برای ویرایش انتخاب کنید.', 'error');
-                return;
+
+        function saveAvailableTimes() {
+            if (selectedDate && selectedTimeSlots.length > 0) {
+                showNotification('زمان‌های خالی ذخیره شدند', 'success');
+                selectedTimeSlots = [];
+                document.getElementById('time-slots-container').style.display = 'none';
+            } else {
+                showNotification('لطفاً تاریخ و زمان انتخاب کنید', 'warning');
             }
+        }
+
+        function previousMonth() {
+            currentMonth = (currentMonth - 1 + 12) % 12;
+            if (currentMonth === 11) currentYear--;
+            generateCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth = (currentMonth + 1) % 12;
+            if (currentMonth === 0) currentYear++;
+            generateCalendar();
+        }
+
+        // Chat functions
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
             
-            const newValues = {};
-            const formInputs = document.querySelectorAll('#contractForm [data-key]');
-            
-            formInputs.forEach(input => {
-                const key = input.dataset.key;
-                // Only include values for selected fields
-                if (selectedFields.includes(key) || 
-                    (selectedFields.includes('contract_dates') && (key === 'contract_start_date' || key === 'contract_end_date'))) {
-                    newValues[key] = input.value.trim();
-                }
-            });
-            
-            // Always include owner_full_name for identification, even if not selected
-            if (!newValues.owner_full_name && originalValues.owner_full_name) {
-                newValues.owner_full_name = originalValues.owner_full_name;
-            }
-            
-            if (!newValues.owner_full_name) {
-                showMessage('لطفاً نام مالک را برای شناسایی قرارداد وارد کنید.', 'error');
-                return;
-            }
-            
-            contractsToProcess.push({ newValues, selectedFields });
-            updateContractList();
-            showMessage(`قرارداد برای "${newValues.owner_full_name}" به صف ساخت اضافه شد.`, 'success');
-            
-            // Clear form after adding
-            contractForm.reset();
-        });
-        
-        clearFormBtn.addEventListener('click', function() {
-            contractForm.reset();
-            showMessage('فرم پاک شد.', 'success');
-        });
-        
-        fillSampleBtn.addEventListener('click', function() {
-            // Check all checkboxes first
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = true;
-            });
-            toggleFieldSections();
-            
-            // Fill sample data
-            document.getElementById('owner_full_name').value = 'علی محمدی';
-            document.getElementById('owner_father_name').value = 'حسین';
-            document.getElementById('owner_national_id').value = '1234567890';
-            document.getElementById('owner_mobile').value = '09123456789';
-            document.getElementById('owner_address').value = 'تهران، خیابان ولیعصر، پلاک 123';
-            document.getElementById('contract_start_date').value = '1402/01/01';
-            document.getElementById('contract_end_date').value = '1403/01/01';
-            document.getElementById('guarantee_amount').value = '10,000,000';
-            showMessage('فرم با اطلاعات نمونه پر شد.', 'success');
-        });
-        
-        // ==================== Main Processing Logic ====================
-        processBtn.addEventListener('click', async function() {
-            if (contractsToProcess.length === 0) {
-                showMessage('هیچ قراردادی برای ساخت در صف وجود ندارد.', 'error');
-                return;
-            }
-            
-            showMessage('در حال ساخت گروهی قراردادها...', 'processing');
-            progressContainer.style.display = 'block';
-            updateProgress(0);
-            this.disabled = true;
-            addToListBtn.disabled = true;
-            clearFormBtn.disabled = true;
-            fillSampleBtn.disabled = true;
-            
-            const finalZip = new JSZip();
-            let processedCount = 0;
-            
-            try {
-                for (let i = 0; i < contractsToProcess.length; i++) {
-                    const contract = contractsToProcess[i];
-                    let processedContent = originalContent;
-                    
-                    // Replace only the selected fields
-                    for (const key in contract.newValues) {
-                        const oldValue = originalValues[key];
-                        const newValue = contract.newValues[key];
-                        
-                        // Only replace if the field was selected and values are different
-                        if (oldValue && newValue && oldValue !== newValue) {
-                            // Escape special regex characters in oldValue
-                            const escapedOldValue = oldValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            const regex = new RegExp(escapedOldValue, 'g');
-                            processedContent = processedContent.replace(regex, newValue);
-                        }
-                    }
-                    
-                    const tempZip = await JSZip.loadAsync(await referenceFile.arrayBuffer());
-                    tempZip.file("word/document.xml", processedContent);
-                    const outputBlob = await tempZip.generateAsync({ type: "blob" });
-                    finalZip.file(`قرارداد-${contract.newValues.owner_full_name || 'نامشخص'}.docx`, outputBlob);
-                    
-                    processedCount++;
-                    processedCountElement.textContent = processedCount;
-                    updateProgress(((i + 1) / contractsToProcess.length) * 100);
-                }
+            if (message) {
+                const messagesContainer = document.getElementById('chat-messages');
+                const messageElement = document.createElement('div');
+                messageElement.className = 'chat-message sent';
+                messageElement.textContent = message;
+                messagesContainer.appendChild(messageElement);
                 
-                const zipBlob = await finalZip.generateAsync({ type: "blob" });
-                saveAs(zipBlob, "قراردادهای_ساخته_شده.zip");
-                showMessage(`✅ ${contractsToProcess.length} قرارداد با موفقیت ساخته و دانلود شد.`, 'success');
+                input.value = '';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 
-                // Clear the list after processing
-                contractsToProcess = [];
-                updateContractList();
-            } catch (error) {
-                showMessage(`❌ خطای جدی در ساخت فایل‌ها: ${error.message}`, 'error');
-                console.error(error);
-            } finally {
-                this.disabled = false;
-                addToListBtn.disabled = false;
-                clearFormBtn.disabled = false;
-                fillSampleBtn.disabled = false;
+                // Simulate response
+                setTimeout(() => {
+                    const responseElement = document.createElement('div');
+                    responseElement.className = 'chat-message received';
+                    responseElement.textContent = 'پیام شما دریافت شد. در اسرع وقت پاسخ خواهم داد.';
+                    messagesContainer.appendChild(responseElement);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Data management
+        function saveAppointments() {
+            localStorage.setItem('vekalaAppointments', JSON.stringify(appointments));
+        }
+
+        function loadAppointments() {
+            const saved = localStorage.getItem('vekalaAppointments');
+            if (saved) {
+                appointments = JSON.parse(saved);
+            }
+            
+            displayClientAppointments();
+            displayLawyerAppointments();
+        }
+
+        function displayClientAppointments() {
+            const container = document.getElementById('appointments-list');
+            container.innerHTML = '';
+            
+            if (appointments.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">هنوز نوبتی رزرو نکرده‌اید</p>';
+                return;
+            }
+            
+            appointments.forEach(appointment => {
+                const appointmentCard = document.createElement('div');
+                appointmentCard.className = 'card';
+                appointmentCard.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${appointment.lawyerName}</div>
+                            <div class="card-subtitle">
+                                <span class="badge badge-success">${appointment.status}</span>
+                                ${new Date(appointment.datetime).toLocaleString('fa-IR')}
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <strong>نوع مشاوره:</strong> ${getConsultationTypeText(appointment.consultationType)}<br>
+                        <strong>توضیحات:</strong> ${appointment.notes || 'بدون توضیح'}
+                    </div>
+                `;
+                container.appendChild(appointmentCard);
+            });
+        }
+
+        function displayLawyerAppointments() {
+            const container = document.getElementById('lawyer-appointments-list');
+            container.innerHTML = '';
+            
+            const lawyerAppointments = appointments.filter(a => a.lawyerId === 1); // Current lawyer
+            
+            if (lawyerAppointments.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">هنوز نوبتی رزرو نشده</p>';
+                return;
+            }
+            
+            lawyerAppointments.forEach(appointment => {
+                const appointmentCard = document.createElement('div');
+                appointmentCard.className = 'card';
+                appointmentCard.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${appointment.clientPhone}</div>
+                            <div class="card-subtitle">
+                                <span class="badge badge-success">${appointment.status}</span>
+                                ${new Date(appointment.datetime).toLocaleString('fa-IR')}
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="startChat('${appointment.clientPhone}')">
+                            <i class="fas fa-comments"></i>
+                            چت
+                        </button>
+                    </div>
+                    <div>
+                        <strong>نوع مشاوره:</strong> ${getConsultationTypeText(appointment.consultationType)}<br>
+                        <strong>توضیحات:</strong> ${appointment.notes || 'بدون توضیح'}
+                    </div>
+                `;
+                container.appendChild(appointmentCard);
+            });
+        }
+
+        function getConsultationTypeText(type) {
+            const types = {
+                'chat': 'چت آنلاین',
+                'video': 'ویدیو کال',
+                'in-person': 'حضوری'
+            };
+            return types[type] || type;
+        }
+
+        function startChat(clientPhone) {
+            showNotification(`چت با ${clientPhone} شروع شد`, 'success');
+        }
+
+        // Admin panel functions
+        function loadLawyersManagement() {
+            const container = document.getElementById('lawyers-management');
+            container.innerHTML = '';
+            
+            lawyers.forEach(lawyer => {
+                const lawyerCard = document.createElement('div');
+                lawyerCard.className = 'card';
+                lawyerCard.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${lawyer.name}</div>
+                            <div class="card-subtitle">
+                                <span class="badge ${lawyer.available ? 'badge-success' : 'badge-danger'}">
+                                    ${lawyer.available ? 'فعال' : 'غیرفعال'}
+                                </span>
+                            </div>
+                        </div>
+                        <button class="btn btn-warning" onclick="toggleLawyerStatus(${lawyer.id})">
+                            <i class="fas fa-toggle-on"></i>
+                            تغییر وضعیت
+                        </button>
+                    </div>
+                    <div>
+                        <strong>تخصص‌ها:</strong> ${lawyer.specialties.join('، ')}<br>
+                        <strong>امتیاز:</strong> ${lawyer.rating} ⭐
+                    </div>
+                `;
+                container.appendChild(lawyerCard);
+            });
+        }
+
+        function toggleLawyerStatus(lawyerId) {
+            const lawyer = lawyers.find(l => l.id === lawyerId);
+            if (lawyer) {
+                lawyer.available = !lawyer.available;
+                loadLawyersManagement();
+                showNotification(`وضعیت ${lawyer.name} تغییر کرد`, 'success');
+            }
+        }
+
+        function loadReports() {
+            const container = document.getElementById('reports');
+            container.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">گزارش ماهانه</div>
+                    </div>
+                    <div>
+                        <strong>کل نوبت‌ها:</strong> ۱۵۰<br>
+                        <strong>نوبت‌های تکمیل شده:</strong> ۱۲۰<br>
+                        <strong>درآمد کل:</strong> ۱۵,۰۰۰,۰۰۰ تومان<br>
+                        <strong>رضایت موکلین:</strong> ۹۲٪
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadRecentActivities() {
+            const container = document.getElementById('recent-activities');
+            const activities = [
+                { action: 'نوبت جدید رزرو شد', time: '۲ دقیقه پیش', type: 'success' },
+                { action: 'وکیل جدید ثبت شد', time: '۱۵ دقیقه پیش', type: 'info' },
+                { action: 'مشاوره تکمیل شد', time: '۱ ساعت پیش', type: 'success' },
+                { action: 'سیستم به‌روزرسانی شد', time: '۲ ساعت پیش', type: 'warning' }
+            ];
+            
+            container.innerHTML = '';
+            activities.forEach(activity => {
+                const activityElement = document.createElement('div');
+                activityElement.className = 'card';
+                activityElement.innerHTML = `
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">${activity.action}</div>
+                            <div class="card-subtitle">${activity.time}</div>
+                        </div>
+                        <span class="badge badge-${activity.type}">${activity.type}</span>
+                    </div>
+                `;
+                container.appendChild(activityElement);
+            });
+        }
+
+        // Lawyer profile form
+        document.getElementById('lawyer-profile-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('اطلاعات پروفایل ذخیره شد', 'success');
+        });
+
+        // Enter key for chat
+        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
         });
     </script>
