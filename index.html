@@ -591,11 +591,8 @@
     </div>
 
     <!-- Include necessary libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.37.9/docxtemplater.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.4/pizzip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.4/pizzip-utils.min.js"></script>
 
     <script>
         // ==================== Global Variables ====================
@@ -756,11 +753,16 @@
                 for (let i = 0; i < totalFiles; i++) {
                     const file = uploadedFiles[i];
                     const arrayBuffer = await file.arrayBuffer();
-                    const zip = new PizZip(arrayBuffer);
+                    const zip = new JSZip();
+                    const zipContent = await zip.loadAsync(arrayBuffer);
 
                     // Load the document content as text to perform replacements
-                    const rawContent = zip.files['word/document.xml']._data;
-                    let contentStr = typeof rawContent === 'string' ? rawContent : new TextDecoder('utf-8').decode(rawContent);
+                    const documentXml = zipContent.files['word/document.xml'];
+                    if (!documentXml) {
+                        throw new Error('فایل Word نامعتبر است - document.xml یافت نشد');
+                    }
+                    
+                    let contentStr = await documentXml.async('text');
 
                     // --- Perform Date Replacements ---
                     function formatDateForDoc(dateStr) {
@@ -816,16 +818,10 @@
                     }
 
                     // Update the content in the zip
-                    if (typeof rawContent === 'object' && rawContent.byteLength !== undefined) {
-                        const encoder = new TextEncoder();
-                        const newContentArray = encoder.encode(contentStr);
-                        zip.file('word/document.xml', newContentArray);
-                    } else {
-                        zip.file('word/document.xml', contentStr);
-                    }
+                    zipContent.file('word/document.xml', contentStr);
 
                     // Generate the new docx blob
-                    const out = zip.generate({ type: "blob" });
+                    const out = await zipContent.generateAsync({ type: "blob" });
 
                     // Create new filename
                     const newName = file.name.replace('.docx', '_ویرایش_شده.docx');
