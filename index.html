@@ -3,1054 +3,1083 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دستیار قرارداد با هوش مصنوعی واقعی</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <title>وکال‌اپ - پلتفرم مشاوره حقوقی</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         :root {
-            --primary-color: #1d3557;
-            --secondary-color: #457b9d;
-            --accent-color: #e63946;
-            --light-bg: #f1faee;
-            --dark-text: #212529;
-            --border-color: #a8dadc;
-            --success-color: #2a9d8f;
-            --warning-color: #f4a261;
-            --error-color: #e76f51;
-            --info-color: #219ebc;
-            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, #14213d 100%);
-            --gradient-secondary: linear-gradient(90deg, var(--secondary-color), var(--info-color));
-            --gradient-accent: linear-gradient(90deg, var(--accent-color), #ff6b6b);
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --warning-color: #FF9500;
+            --danger-color: #FF3B30;
+            --background-color: #F2F2F7;
+            --card-background: #FFFFFF;
+            --text-primary: #1C1C1E;
+            --text-secondary: #8E8E93;
+            --border-color: #E5E5EA;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --border-radius: 12px;
         }
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
+
         body {
-            font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
-            background: linear-gradient(to bottom, #e0f7fa, #bbdefb);
-            color: var(--dark-text);
-            line-height: 1.7;
-            padding: 20px;
-            min-height: 100vh;
+            background: var(--background-color);
+            color: var(--text-primary);
+            direction: rtl;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
         .container {
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--card-background);
+            padding: 20px 0;
             box-shadow: var(--shadow);
-            overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        header {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 50px 30px;
-            text-align: center;
-            border-bottom: 6px solid var(--accent-color);
-            position: relative;
-            overflow: hidden;
-        }
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(30deg);
-        }
-        header h1 { 
-            font-size: 3rem; 
-            margin-bottom: 10px; 
-            font-weight: 700; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); 
-            position: relative;
-            z-index: 2;
-        }
-        header p { 
-            font-size: 1.3rem; 
-            opacity: 0.9; 
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 30px;
-            padding: 30px;
-        }
-        @media (max-width: 1200px) { 
-            .main-content { 
-                grid-template-columns: 1fr; 
-            } 
-        }
-        .panel {
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            transition: var(--transition);
-        }
-        .panel:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-            transform: translateY(-5px);
-        }
-        .panel h2 {
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 4px solid var(--secondary-color);
-            font-size: 1.8rem;
+
+        .header-content {
             display: flex;
+            justify-content: space-between;
             align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-        .panel h2 i {
-            margin-left: 15px;
-            font-size: 1.8rem;
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
         }
-        .form-group { 
-            margin-bottom: 22px; 
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
         }
-        label {
+
+        .nav-tab {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav-tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 30px;
+        }
+
+        .panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
         }
-        input, textarea, select {
+
+        .form-input, .form-textarea, .form-select {
             width: 100%;
-            padding: 15px 18px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 1.05rem;
-            transition: var(--transition);
-            background-color: #f8f9fa;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background: var(--card-background);
         }
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--secondary-color);
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
             outline: none;
-            box-shadow: 0 0 0 4px rgba(69, 123, 157, 0.25);
-            background-color: white;
+            border-color: var(--primary-color);
         }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Buttons */
         .btn {
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 15px 35px; 
-            background: var(--gradient-secondary); 
-            color: white;
-            border: none; 
-            border-radius: 12px; 
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
-            font-size: 1.2rem; 
-            font-weight: 700; 
-            transition: var(--transition);
-            margin: 5px; 
-            text-decoration: none; 
-            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
-            min-width: 200px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
         }
-        .btn:hover:not(:disabled) {
-            background: var(--gradient-primary);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
         }
-        .btn:disabled { 
-            background: #ced4da; 
-            cursor: not-allowed; 
-            box-shadow: none; 
-            transform: none;
+
+        .btn-primary:hover {
+            background: #0056CC;
         }
-        .btn-accent { 
-            background: var(--gradient-accent); 
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
         }
-        .btn-accent:hover:not(:disabled) { 
-            background: linear-gradient(90deg, #c91c28, #ff4b4b);
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
         }
-        .btn-success { 
-            background: var(--gradient-secondary); 
-        }
-        .btn-success:hover:not(:disabled) { 
-            background: linear-gradient(90deg, #218a7d, #3bb09d);
-        }
+
         .btn-warning {
-            background: var(--gradient-accent);
+            background: var(--warning-color);
+            color: white;
         }
-        .btn-warning:hover:not(:disabled) {
-            background: linear-gradient(90deg, #e76f51, #f4a261);
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
         }
-        .file-upload-wrapper {
-            position: relative; 
-            padding: 50px; 
-            border: 3px dashed var(--border-color);
-            border-radius: 20px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: var(--transition);
-            background-color: var(--light-bg);
-            min-height: 200px;
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* Lawyer Cards */
+        .lawyer-card {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .lawyer-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .lawyer-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .lawyer-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .lawyer-specialty {
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .lawyer-rating {
+            color: var(--warning-color);
+            margin-bottom: 10px;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            height: 400px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--background-color);
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+        }
+
+        .message.received .message-content {
+            background: var(--card-background);
+            color: var(--text-primary);
+        }
+
+        .message.sent .message-content {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 15px;
+            background: var(--card-background);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            margin-left: 10px;
+        }
+
+        /* Calendar */
+        .calendar {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
         }
-        .file-upload-wrapper:hover, .file-upload-wrapper.active {
-            border-color: var(--secondary-color);
-            transform: scale(1.02);
-            background: #eaf7f7;
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
         }
-        #fileInput { 
-            display: none; 
+
+        .calendar-day {
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-        #fileName { 
-            margin-top: 15px; 
-            color: var(--success-color); 
-            font-weight: 600; 
-            font-size: 1.2rem; 
+
+        .calendar-day:hover {
+            background: var(--background-color);
         }
-        .file-list { 
-            margin-top: 20px; 
-            max-height: 300px; 
-            overflow-y: auto; 
-            border: 1px solid #ddd; 
-            border-radius: 10px; 
-            padding: 10px; 
-            background: #f8f9fa; 
+
+        .calendar-day.selected {
+            background: var(--primary-color);
+            color: white;
         }
-        .file-item { 
-            padding: 14px; 
-            border-bottom: 1px solid #e9ecef; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            transition: background-color 0.2s; 
+
+        .calendar-day.available {
+            background: var(--success-color);
+            color: white;
         }
-        .file-item:last-child { 
-            border-bottom: none; 
+
+        /* Time Slots */
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
         }
-        .file-item:hover { 
-            background-color: #e9ecef; 
+
+        .time-slot {
+            padding: 10px;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        .file-remove { 
-            color: var(--accent-color); 
-            cursor: pointer; 
-            font-size: 1.6rem; 
-            font-weight: bold; 
-            transition: var(--transition);
+
+        .time-slot:hover {
+            border-color: var(--primary-color);
         }
-        .file-remove:hover {
-            transform: scale(1.2);
+
+        .time-slot.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
-        .progress-container { 
-            margin-top: 25px; 
-            display: none; 
+
+        /* Status Badges */
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
         }
-        .progress-bar { 
-            height: 30px; 
-            background: #e9ecef; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            position: relative; 
+
+        .badge-success {
+            background: var(--success-color);
+            color: white;
         }
-        .progress-fill { 
-            height: 100%; 
-            background: var(--gradient-secondary); 
-            width: 0%; 
-            transition: width 0.5s ease; 
+
+        .badge-warning {
+            background: var(--warning-color);
+            color: white;
         }
-        .progress-text { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            font-weight: bold; 
-            font-size: 1.1rem; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.4); 
+
+        .badge-danger {
+            background: var(--danger-color);
+            color: white;
         }
-        .status-message { 
-            margin-top: 20px; 
-            padding: 20px; 
-            border-radius: 12px; 
-            text-align: center; 
-            font-weight: 500; 
-            font-size: 1.2rem; 
-            display: none; 
-            animation: fadeIn 0.5s ease; 
-            position: relative;
-            overflow: hidden;
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
         }
-        .status-message::before {
-            content: "";
-            position: absolute;
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--border-color);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            color: white;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--danger-color);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%);
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
         }
-        .status-message.processing::before {
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes fadeIn { 
-            from { 
-                opacity: 0; 
-                transform: translateY(10px); 
-            } 
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            } 
-        }
-        @keyframes shimmer {
-            100% {
-                transform: translateX(100%);
-            }
-        }
-        .status-message.success { 
-            background: #e6fffa; 
-            color: #047857; 
-            border: 2px solid #6ee7b7; 
-            display: block; 
-        }
-        .status-message.error { 
-            background: #fee2e2; 
-            color: #b91c1c; 
-            border: 2px solid #fca5a5; 
-            display: block; 
-        }
-        .status-message.processing { 
-            background: #fef9c3; 
-            color: #a16207; 
-            border: 2px solid #fde047; 
-            display: block; 
-        }
-        .input-group { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 25px; 
-        }
-        @media (max-width: 600px) { 
-            .input-group { 
-                grid-template-columns: 1fr; 
-                gap: 0; 
-            } 
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--primary-color);
-            color: white;
-            font-size: 1rem;
-        }
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-        .feature-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+
+        .modal.active {
             display: flex;
             align-items: center;
-        }
-        .feature-list li i {
-            margin-left: 10px;
-            color: var(--success-color);
-        }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        .stat-item {
-            text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            flex: 1;
-            margin: 5px;
-            min-width: 120px;
-        }
-        .stat-item .number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        .stat-item .label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: var(--dark-text);
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
         }
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+
+        .modal-content {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
-        .card-title {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .card-title i {
-            margin-left: 10px;
-        }
-        .instructions {
-            background: #e3f2fd;
-            border-right: 4px solid var(--info-color);
-            padding: 15px;
-            border-radius: 0 10px 10px 0;
-            margin: 20px 0;
-        }
-        .instructions h3 {
-            margin-top: 0;
-            color: var(--info-color);
-        }
-        .instructions ul {
-            padding-right: 20px;
-        }
-        .instructions li {
-            margin-bottom: 10px;
-        }
-        /* Checkbox styling for selective fields */
-        .field-checkbox {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            transition: background-color 0.3s;
-        }
-        .field-checkbox:hover {
-            background-color: #e9ecef;
-        }
-        .field-checkbox input[type="checkbox"] {
-            width: auto;
-            margin-left: 10px;
-            transform: scale(1.3);
-        }
-        .field-checkbox label {
-            margin-bottom: 0;
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
             cursor: pointer;
-            font-weight: normal;
-        }
-        .checkbox-group {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            background-color: #fafafa;
-        }
-        .checkbox-group h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-        }
-        .checkbox-group h3 i {
-            margin-left: 10px;
-        }
-        .field-section {
-            display: none;
-        }
-        .field-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">وکال‌اپ</div>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="showPanel('client')">پنل موکل</button>
+                <button class="nav-tab" onclick="showPanel('lawyer')">پنل وکیل</button>
+                <button class="nav-tab" onclick="showPanel('admin')">پنل مدیر</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
     <div class="container">
-        <header>
-            <h1><i class="fas fa-robot"></i> دستیار هوشمند قرارداد</h1>
-            <p>قراردادهای تکمیل‌شده را آپلود کنید، هوش مصنوعی فیلدها را تشخیص می‌دهد، سپس ویرایش و به صورت گروهی تولید کنید</p>
-        </header>
-        
         <div class="main-content">
-            <div class="panel">
-                <h2><i class="fas fa-upload"></i> ۱. بارگذاری و تحلیل</h2>
-                <div class="file-upload-wrapper" id="dropZone">
-                    <i class="fas fa-file-word fa-3x" style="color: var(--secondary-color); margin-bottom: 15px;"></i>
-                    <h3>فایل قرارداد مرجع (.docx) را اینجا بکشید</h3>
-                    <p>یا برای انتخاب کلیک کنید</p>
-                    <input type="file" id="fileInput" accept=".docx">
-                    <div id="fileName"></div>
+            <!-- Client Panel -->
+            <div id="client-panel" class="panel active">
+                <div class="card">
+                    <h2 class="card-title">مشکل حقوقی خود را شرح دهید</h2>
+                    <form id="legal-issue-form">
+                        <div class="form-group">
+                            <label class="form-label">نوع مشکل حقوقی</label>
+                            <select class="form-select" id="issue-type" required>
+                                <option value="">انتخاب کنید</option>
+                                <option value="family">خانواده و طلاق</option>
+                                <option value="civil">حقوق مدنی</option>
+                                <option value="criminal">کیفری</option>
+                                <option value="commercial">تجاری</option>
+                                <option value="labor">کار و تامین اجتماعی</option>
+                                <option value="property">املاک و مستغلات</option>
+                                <option value="tax">مالیاتی</option>
+                                <option value="other">سایر</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">شرح کامل مشکل</label>
+                            <textarea class="form-textarea" id="issue-description" placeholder="مشکل حقوقی خود را به طور کامل شرح دهید..." required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">شماره تماس</label>
+                            <input type="tel" class="form-input" id="client-phone" placeholder="09123456789" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">ارسال و یافتن وکیل مناسب</button>
+                    </form>
                 </div>
-                
-                <div class="instructions">
-                    <h3><i class="fas fa-info-circle"></i> راهنمای استفاده</h3>
-                    <ul>
-                        <li>فایل قرارداد مرجع خود را در این قسمت آپلود کنید</li>
-                        <li>سیستم به طور خودکار فیلدهای قرارداد را تشخیص می‌دهد</li>
-                        <li>فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید</li>
-                        <li>اطلاعات جدید را وارد کرده و به لیست اضافه کنید</li>
-                        <li>در نهایت تمام قراردادها را به صورت یک فایل ZIP دانلود کنید</li>
-                    </ul>
+
+                <div id="lawyers-list" class="grid grid-3" style="display: none;">
+                    <h3 style="grid-column: 1 / -1; margin-bottom: 20px;">وکلا پیشنهادی برای مشکل شما:</h3>
                 </div>
-                
-                <h2 style="margin-top: 30px;"><i class="fas fa-list"></i> ۲. صف ساخت قراردادها</h2>
-                <div class="file-list" id="contractList">
-                    <p style="text-align: center; color: #666;">قراردادی در صف ساخت نیست.</p>
-                </div>
-                
-                <div class="progress-container" id="progressContainer">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                        <div class="progress-text" id="progressText">0%</div>
+
+                <div id="appointment-section" style="display: none;">
+                    <div class="card">
+                        <h3 class="card-title">رزرو نوبت</h3>
+                        <div id="selected-lawyer-info"></div>
+                        <div class="calendar">
+                            <div class="calendar-header">
+                                <button class="btn btn-secondary" onclick="previousMonth()">ماه قبل</button>
+                                <h4 id="current-month">تیر ۱۴۰۲</h4>
+                                <button class="btn btn-secondary" onclick="nextMonth()">ماه بعد</button>
+                            </div>
+                            <div class="calendar-grid" id="calendar-grid"></div>
+                        </div>
+                        <div class="time-slots" id="time-slots"></div>
+                        <button class="btn btn-success" onclick="bookAppointment()" style="margin-top: 20px;">رزرو نوبت</button>
                     </div>
                 </div>
-                
-                <div id="statusMessage" class="status-message"></div>
-                
-                <div style="text-align: center; margin-top: 25px;">
-                    <button id="processBtn" class="btn btn-success" disabled>
-                        <i class="fas fa-download"></i> ساخت همه قراردادها و دانلود (ZIP)
-                    </button>
+
+                <div id="chat-section" style="display: none;">
+                    <div class="card">
+                        <h3 class="card-title">گفتگو با وکیل</h3>
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chat-messages"></div>
+                            <div class="chat-input">
+                                <input type="text" id="chat-input" placeholder="پیام خود را بنویسید...">
+                                <button class="btn btn-primary" onclick="sendMessage()">ارسال</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            
-            <div class="panel">
-                <h2><i class="fas fa-edit"></i> ۳. فرم ویرایش اطلاعات (تشخیص خودکار)</h2>
-                
-                <div class="checkbox-group">
-                    <h3><i class="fas fa-check-square"></i> فیلدهای قابل ویرایش</h3>
-                    <p>فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید:</p>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_full_name" data-field="owner_full_name">
-                        <label for="chk_owner_full_name">نام و نام خانوادگی مالک</label>
+
+            <!-- Lawyer Panel -->
+            <div id="lawyer-panel" class="panel">
+                <div class="card">
+                    <h2 class="card-title">مدیریت زمان‌های خالی</h2>
+                    <form id="availability-form">
+                        <div class="form-group">
+                            <label class="form-label">تاریخ (شمسی)</label>
+                            <input type="text" class="form-input" id="persian-date" placeholder="۱۴۰۲/۰۴/۱۵" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ساعت شروع</label>
+                            <input type="time" class="form-input" id="start-time" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ساعت پایان</label>
+                            <input type="time" class="form-input" id="end-time" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">نوع مشاوره</label>
+                            <select class="form-select" id="consultation-type">
+                                <option value="chat">چت</option>
+                                <option value="call">تماس تلفنی</option>
+                                <option value="meeting">حضوری</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">افزودن زمان خالی</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">نوبت‌های رزرو شده</h3>
+                    <div id="lawyer-appointments"></div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">گفتگو با موکلین</h3>
+                    <div id="lawyer-chats"></div>
+                </div>
+            </div>
+
+            <!-- Admin Panel -->
+            <div id="admin-panel" class="panel">
+                <div class="grid grid-2">
+                    <div class="card">
+                        <h3 class="card-title">آمار کلی</h3>
+                        <div id="admin-stats">
+                            <p>تعداد کل موکلین: <span id="total-clients">0</span></p>
+                            <p>تعداد کل وکلا: <span id="total-lawyers">0</span></p>
+                            <p>نوبت‌های امروز: <span id="today-appointments">0</span></p>
+                            <p>مشاوره‌های انجام شده: <span id="completed-consultations">0</span></p>
+                        </div>
                     </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_father_name" data-field="owner_father_name">
-                        <label for="chk_owner_father_name">نام پدر</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_national_id" data-field="owner_national_id">
-                        <label for="chk_owner_national_id">کد ملی مالک</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_mobile" data-field="owner_mobile">
-                        <label for="chk_owner_mobile">شماره موبایل</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_address" data-field="owner_address">
-                        <label for="chk_owner_address">آدرس مالک</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_contract_dates" data-field="contract_dates">
-                        <label for="chk_contract_dates">تاریخ‌های قرارداد</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_guarantee_amount" data-field="guarantee_amount">
-                        <label for="chk_guarantee_amount">مبلغ سفته</label>
+
+                    <div class="card">
+                        <h3 class="card-title">وکلا</h3>
+                        <div id="admin-lawyers"></div>
                     </div>
                 </div>
-                
-                <form id="contractForm">
-                    <div id="fieldSections">
-                        <!-- Owner Full Name Section -->
-                        <div class="field-section" id="section_owner_full_name">
-                            <div class="form-group">
-                                <label for="owner_full_name">نام و نام خانوادگی مالک</label>
-                                <input type="text" id="owner_full_name" data-key="owner_full_name">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner Father Name Section -->
-                        <div class="field-section" id="section_owner_father_name">
-                            <div class="form-group">
-                                <label for="owner_father_name">نام پدر</label>
-                                <input type="text" id="owner_father_name" data-key="owner_father_name">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner National ID Section -->
-                        <div class="field-section" id="section_owner_national_id">
-                            <div class="form-group">
-                                <label for="owner_national_id">کد ملی مالک</label>
-                                <input type="text" id="owner_national_id" data-key="owner_national_id">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner Mobile Section -->
-                        <div class="field-section" id="section_owner_mobile">
-                            <div class="form-group">
-                                <label for="owner_mobile">شماره موبایل</label>
-                                <input type="text" id="owner_mobile" data-key="owner_mobile">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner Address Section -->
-                        <div class="field-section" id="section_owner_address">
-                            <div class="form-group">
-                                <label for="owner_address">آدرس مالک</label>
-                                <textarea id="owner_address" data-key="owner_address" rows="2"></textarea>
-                            </div>
-                        </div>
-                        
-                        <!-- Contract Dates Section -->
-                        <div class="field-section" id="section_contract_dates">
-                            <div class="input-group">
-                                <div class="form-group">
-                                    <label for="contract_start_date">تاریخ شروع قرارداد</label>
-                                    <input type="text" id="contract_start_date" data-key="contract_start_date" placeholder="YYYY/MM/DD">
-                                </div>
-                                <div class="form-group">
-                                    <label for="contract_end_date">تاریخ پایان قرارداد</label>
-                                    <input type="text" id="contract_end_date" data-key="contract_end_date" placeholder="YYYY/MM/DD">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Guarantee Amount Section -->
-                        <div class="field-section" id="section_guarantee_amount">
-                            <div class="form-group">
-                                <label for="guarantee_amount">مبلغ سفته</label>
-                                <input type="text" id="guarantee_amount" data-key="guarantee_amount">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="text-align: center; margin-top: 30px;">
-                        <button type="submit" id="addToListBtn" class="btn btn-accent" disabled>
-                            <i class="fas fa-plus"></i> افزودن به صف ساخت
-                        </button>
-                    </div>
-                </form>
-                
-                <div class="action-buttons">
-                    <button id="clearFormBtn" class="btn btn-warning">
-                        <i class="fas fa-eraser"></i> پاک کردن فرم
-                    </button>
-                    <button id="fillSampleBtn" class="btn">
-                        <i class="fas fa-magic"></i> پر کردن نمونه
-                    </button>
+
+                <div class="card">
+                    <h3 class="card-title">درخواست‌های جدید</h3>
+                    <div id="admin-requests"></div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">گزارش‌ها</h3>
+                    <div id="admin-reports"></div>
                 </div>
             </div>
         </div>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <div class="number" id="fileCount">0</div>
-                <div class="label">فایل آپلود شده</div>
-            </div>
-            <div class="stat-item">
-                <div class="number" id="contractCount">0</div>
-                <div class="label">قرارداد در صف</div>
-            </div>
-            <div class="stat-item">
-                <div class="number" id="processedCount">0</div>
-                <div class="label">قرارداد پردازش شده</div>
-            </div>
-        </div>
-        
-        <div class="card">
-            <h2 class="card-title"><i class="fas fa-star"></i> ویژگی‌های برجسته</h2>
-            <ul class="feature-list">
-                <li><i class="fas fa-check-circle"></i> تشخیص خودکار فیلدهای قرارداد</li>
-                <li><i class="fas fa-check-circle"></i> انتخاب فیلدهای قابل ویرایش</li>
-                <li><i class="fas fa-check-circle"></i> پردازش گروهی قراردادها</li>
-                <li><i class="fas fa-check-circle"></i> دانلود خروجی به صورت فایل ZIP</li>
-                <li><i class="fas fa-check-circle"></i> رابط کاربری زیبا و کاربرپسند</li>
-                <li><i class="fas fa-check-circle"></i> پشتیبانی از drag & drop</li>
-                <li><i class="fas fa-check-circle"></i> نمایش پیشرفت پردازش</li>
-            </ul>
-        </div>
-        
-        <footer>
-            <p>© 2023 دستیار هوشمند قرارداد. تمامی حقوق محفوظ است.</p>
-        </footer>
     </div>
-    
+
+    <!-- Modals -->
+    <div id="appointment-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تایید نوبت</h3>
+                <button class="modal-close" onclick="closeModal('appointment-modal')">&times;</button>
+            </div>
+            <div id="appointment-details"></div>
+            <button class="btn btn-success" onclick="confirmAppointment()">تایید نوبت</button>
+        </div>
+    </div>
+
     <script>
-        // ==================== Global Variables ====================
-        let referenceFile = null;
-        let originalContent = '';
-        let originalValues = {};
-        let contractsToProcess = [];
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const fileNameElement = document.getElementById('fileName');
-        const contractForm = document.getElementById('contractForm');
-        const addToListBtn = document.getElementById('addToListBtn');
-        const contractListElement = document.getElementById('contractList');
-        const processBtn = document.getElementById('processBtn');
-        const statusMessage = document.getElementById('statusMessage');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const clearFormBtn = document.getElementById('clearFormBtn');
-        const fillSampleBtn = document.getElementById('fillSampleBtn');
-        const fileCountElement = document.getElementById('fileCount');
-        const contractCountElement = document.getElementById('contractCount');
-        const processedCountElement = document.getElementById('processedCount');
-        
-        // ==================== AI-Powered Field Definitions ====================
-        function createTableAwareRegex(label) {
-            return new RegExp(`<w:t>${label}<\/w:t>.*?<\/w:tc>.*?<w:tc.*?>(.*?)<\/w:tc>`);
-        }
-        
-        const FIELD_DEFINITIONS = {
-            owner_full_name: [createTableAwareRegex('نام و نام خانوادگی:')],
-            owner_father_name: [createTableAwareRegex('نام پدر:')],
-            owner_national_id: [createTableAwareRegex('کد ملی:')],
-            owner_id_number: [createTableAwareRegex('شماره شناسنامه:')],
-            owner_mobile: [createTableAwareRegex('شماره تلفن همراه:')],
-            owner_address: [createTableAwareRegex('نشانی اقامتگاه:')],
-            dates: [/از\s*تاريخ\s*(.*?)\s*تا\s*(.*?)\s*معتبر است/],
-            guarantee_amount: [/یک عدد سفته به مبلغ\s*(.*?)\s*ریال/]
-        };
-        
-        // ==================== Helper Functions ====================
-        function showMessage(text, type) {
-            statusMessage.textContent = text;
-            statusMessage.className = 'status-message ' + type;
-        }
-        
-        function updateContractList() {
-            contractListElement.innerHTML = '';
-            if (contractsToProcess.length === 0) {
-                contractListElement.innerHTML = '<p style="text-align: center; color: #666;">قراردادی در صف ساخت نیست.</p>';
-                processBtn.disabled = true;
-                contractCountElement.textContent = '0';
-                return;
+        // Global Variables
+        let currentPanel = 'client';
+        let selectedLawyer = null;
+        let selectedDate = null;
+        let selectedTime = null;
+        let currentMonth = 4; // تیر
+        let currentYear = 1402;
+
+        // Sample Data
+        const lawyers = [
+            {
+                id: 1,
+                name: "دکتر احمد محمدی",
+                specialty: "خانواده و طلاق",
+                rating: 4.8,
+                experience: "۱۵ سال",
+                avatar: "AM"
+            },
+            {
+                id: 2,
+                name: "دکتر فاطمه کریمی",
+                specialty: "حقوق مدنی",
+                rating: 4.9,
+                experience: "۱۲ سال",
+                avatar: "FK"
+            },
+            {
+                id: 3,
+                name: "دکتر علی رضایی",
+                specialty: "کیفری",
+                rating: 4.7,
+                experience: "۱۸ سال",
+                avatar: "AR"
+            },
+            {
+                id: 4,
+                name: "دکتر مریم احمدی",
+                specialty: "تجاری",
+                rating: 4.6,
+                experience: "۱۰ سال",
+                avatar: "MA"
             }
+        ];
+
+        const clients = [];
+        const appointments = [];
+        const chats = [];
+
+        // Panel Navigation
+        function showPanel(panelName) {
+            document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
             
-            contractsToProcess.forEach((contract, index) => {
-                const item = document.createElement('div');
-                item.className = 'file-item';
-                item.innerHTML = `
-                    <span>${index + 1}. قرارداد برای: <strong>${contract.newValues.owner_full_name || 'نامشخص'}</strong></span>
-                    <span class="file-remove" data-index="${index}" title="حذف از لیست">×</span>
-                `;
-                contractListElement.appendChild(item);
-            });
+            document.getElementById(panelName + '-panel').classList.add('active');
+            event.target.classList.add('active');
+            currentPanel = panelName;
             
-            document.querySelectorAll('.file-remove').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    contractsToProcess.splice(parseInt(this.dataset.index), 1);
-                    updateContractList();
-                });
-            });
-            
-            processBtn.disabled = false;
-            contractCountElement.textContent = contractsToProcess.length;
-        }
-        
-        function updateProgress(percent) {
-            const roundedPercent = Math.round(percent);
-            progressFill.style.width = percent + '%';
-            progressText.textContent = roundedPercent + '%';
-        }
-        
-        function updateStats() {
-            fileCountElement.textContent = referenceFile ? '1' : '0';
-            contractCountElement.textContent = contractsToProcess.length;
-        }
-        
-        // Toggle field sections based on checkbox selection
-        function toggleFieldSections() {
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-                const field = checkbox.dataset.field;
-                const section = document.getElementById(`section_${field}`);
-                
-                if (section) {
-                    if (checkbox.checked) {
-                        section.classList.add('active');
-                    } else {
-                        section.classList.remove('active');
-                    }
-                }
-            });
-            
-            // Special handling for contract dates
-            const datesChecked = document.getElementById('chk_contract_dates').checked;
-            if (datesChecked) {
-                document.getElementById('section_contract_dates').classList.add('active');
-            } else {
-                document.getElementById('section_contract_dates').classList.remove('active');
+            if (panelName === 'admin') {
+                updateAdminPanel();
             }
         }
-        
-        // ==================== AI-Powered Extraction Logic ====================
-        async function extractDataFromFile(file) {
-            showMessage('در حال تحلیل هوشمند قرارداد...', 'processing');
-            try {
-                const buffer = await file.arrayBuffer();
-                const zip = await JSZip.loadAsync(buffer);
-                const doc = zip.file("word/document.xml");
-                if (!doc) throw new Error("فایل Word نامعتبر است.");
-                originalContent = await doc.async("string");
+
+        // Client Panel Functions
+        document.getElementById('legal-issue-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const issueType = document.getElementById('issue-type').value;
+            const description = document.getElementById('issue-description').value;
+            const phone = document.getElementById('client-phone').value;
+
+            // AI-powered lawyer matching
+            const matchedLawyers = matchLawyers(issueType, description);
+            displayLawyers(matchedLawyers);
+            
+            showNotification('درخواست شما با موفقیت ثبت شد و وکلا مناسب پیدا شدند', 'success');
+        });
+
+        function matchLawyers(issueType, description) {
+            // Simple AI matching based on specialty and keywords
+            const keywords = description.toLowerCase();
+            let matchedLawyers = lawyers.filter(lawyer => {
+                if (issueType === lawyer.specialty.toLowerCase()) return true;
                 
-                const cleanTextContent = originalContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                const structuralContent = originalContent.replace(/(\r\n|\n|\r)/gm," ");
-                
-                const cleanValue = (value) => {
-                    if (!value) return '';
-                    let cleaned = value.replace(/<[^>]+>/g, ' ');
-                    cleaned = cleaned.replace(/\s+/g, ' ').trim();
-                    cleaned = cleaned.replace(/\s*\/\s*/g, '/');
-                    return cleaned;
+                const specialtyKeywords = {
+                    'family': ['خانواده', 'طلاق', 'مهریه', 'نفقه'],
+                    'civil': ['مدنی', 'قرارداد', 'مالکیت'],
+                    'criminal': ['کیفری', 'جرم', 'مجازات'],
+                    'commercial': ['تجاری', 'شرکت', 'بازرگانی'],
+                    'labor': ['کار', 'تامین اجتماعی', 'کارگری'],
+                    'property': ['املاک', 'مستغلات', 'ملک'],
+                    'tax': ['مالیاتی', 'مالیات', 'دارایی']
                 };
+
+                const relevantKeywords = specialtyKeywords[issueType] || [];
+                return relevantKeywords.some(keyword => keywords.includes(keyword));
+            });
+
+            return matchedLawyers.length > 0 ? matchedLawyers : lawyers.slice(0, 2);
+        }
+
+        function displayLawyers(lawyersList) {
+            const container = document.getElementById('lawyers-list');
+            container.innerHTML = '<h3 style="grid-column: 1 / -1; margin-bottom: 20px;">وکلا پیشنهادی برای مشکل شما:</h3>';
+            
+            lawyersList.forEach(lawyer => {
+                const lawyerCard = document.createElement('div');
+                lawyerCard.className = 'lawyer-card';
+                lawyerCard.onclick = () => selectLawyer(lawyer);
                 
-                originalValues = {};
-                for (const key in FIELD_DEFINITIONS) {
-                    if (key === 'dates') continue;
-                    let patternToUse = FIELD_DEFINITIONS[key][0];
-                    let contentToSearch = (key === 'guarantee_amount') ? cleanTextContent : structuralContent;
-                    const match = contentToSearch.match(patternToUse);
-                    if (match && match[1]) {
-                        originalValues[key] = cleanValue(match[1]);
-                    }
+                lawyerCard.innerHTML = `
+                    <div class="lawyer-avatar">${lawyer.avatar}</div>
+                    <div class="lawyer-name">${lawyer.name}</div>
+                    <div class="lawyer-specialty">${lawyer.specialty}</div>
+                    <div class="lawyer-rating">⭐ ${lawyer.rating} (${lawyer.experience} تجربه)</div>
+                    <button class="btn btn-primary" style="margin-top: 10px;">انتخاب وکیل</button>
+                `;
+                
+                container.appendChild(lawyerCard);
+            });
+            
+            container.style.display = 'grid';
+        }
+
+        function selectLawyer(lawyer) {
+            selectedLawyer = lawyer;
+            document.getElementById('selected-lawyer-info').innerHTML = `
+                <div style="background: var(--background-color); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <h4>وکیل انتخاب شده: ${lawyer.name}</h4>
+                    <p>تخصص: ${lawyer.specialty}</p>
+                    <p>امتیاز: ⭐ ${lawyer.rating}</p>
+                </div>
+            `;
+            document.getElementById('appointment-section').style.display = 'block';
+            generateCalendar();
+        }
+
+        // Calendar Functions
+        function generateCalendar() {
+            const persianMonths = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'];
+            document.getElementById('current-month').textContent = `${persianMonths[currentMonth - 1]} ${currentYear}`;
+            
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            
+            // Add day headers
+            const days = ['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج'];
+            days.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day';
+                dayHeader.style.fontWeight = 'bold';
+                dayHeader.textContent = day;
+                grid.appendChild(dayHeader);
+            });
+            
+            // Add calendar days
+            const daysInMonth = 31; // Simplified
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = i;
+                dayElement.onclick = () => selectDate(i);
+                
+                // Mark some days as available
+                if (i % 3 === 0) {
+                    dayElement.classList.add('available');
                 }
                 
-                const dateMatch = cleanTextContent.match(FIELD_DEFINITIONS.dates[0]);
-                if (dateMatch && dateMatch[1] && dateMatch[2]) {
-                    originalValues.contract_start_date = cleanValue(dateMatch[1]);
-                    originalValues.contract_end_date = cleanValue(dateMatch[2]);
-                }
-                
-                // Populate the form with extracted values
-                contractForm.reset();
-                for (const key in originalValues) {
-                    const element = document.getElementById(key);
-                    if (element) {
-                        element.value = originalValues[key] || '';
-                    }
-                }
-                
-                showMessage('تحلیل با موفقیت انجام شد. مقادیر شناسایی‌شده در فرم قرار گرفت.', 'success');
-                addToListBtn.disabled = false;
-                updateStats();
-            } catch (error) {
-                showMessage(`خطا در تحلیل فایل: ${error.message}`, 'error');
-                console.error(error);
-                addToListBtn.disabled = true;
+                grid.appendChild(dayElement);
             }
         }
-        
-        // ==================== Event Listeners ====================
-        function handleFileSelect(file) {
-            if (file && file.name.endsWith('.docx')) {
-                referenceFile = file;
-                fileNameElement.textContent = `فایل مرجع: ${file.name}`;
-                dropZone.classList.add('active');
-                extractDataFromFile(file);
-            } else {
-                showMessage('خطا: لطفاً یک فایل .docx معتبر انتخاب کنید.', 'error');
-            }
+
+        function selectDate(day) {
+            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+            event.target.classList.add('selected');
+            selectedDate = `${currentYear}/${currentMonth.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}`;
+            generateTimeSlots();
         }
-        
-        dropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
-        dropZone.addEventListener('dragover', (e) => { 
-            e.preventDefault(); 
-            dropZone.classList.add('active'); 
-        });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
-        dropZone.addEventListener('drop', (e) => {
+
+        function generateTimeSlots() {
+            const container = document.getElementById('time-slots');
+            container.innerHTML = '';
+            
+            const times = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'];
+            times.forEach(time => {
+                const slot = document.createElement('div');
+                slot.className = 'time-slot';
+                slot.textContent = time;
+                slot.onclick = () => selectTime(time);
+                container.appendChild(slot);
+            });
+        }
+
+        function selectTime(time) {
+            document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+            event.target.classList.add('selected');
+            selectedTime = time;
+        }
+
+        function previousMonth() {
+            currentMonth--;
+            if (currentMonth < 1) {
+                currentMonth = 12;
+                currentYear--;
+            }
+            generateCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth++;
+            if (currentMonth > 12) {
+                currentMonth = 1;
+                currentYear++;
+            }
+            generateCalendar();
+        }
+
+        function bookAppointment() {
+            if (!selectedLawyer || !selectedDate || !selectedTime) {
+                showNotification('لطفاً وکیل، تاریخ و زمان را انتخاب کنید', 'error');
+                return;
+            }
+            
+            const modal = document.getElementById('appointment-modal');
+            const details = document.getElementById('appointment-details');
+            
+            details.innerHTML = `
+                <p><strong>وکیل:</strong> ${selectedLawyer.name}</p>
+                <p><strong>تاریخ:</strong> ${selectedDate}</p>
+                <p><strong>ساعت:</strong> ${selectedTime}</p>
+                <p><strong>نوع مشاوره:</strong> حضوری</p>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function confirmAppointment() {
+            const appointment = {
+                id: Date.now(),
+                lawyer: selectedLawyer,
+                client: {
+                    name: 'موکل',
+                    phone: document.getElementById('client-phone').value
+                },
+                date: selectedDate,
+                time: selectedTime,
+                type: 'meeting',
+                status: 'confirmed'
+            };
+            
+            appointments.push(appointment);
+            closeModal('appointment-modal');
+            showNotification('نوبت شما با موفقیت رزرو شد', 'success');
+            
+            // Show chat section
+            document.getElementById('chat-section').style.display = 'block';
+            initializeChat();
+        }
+
+        // Lawyer Panel Functions
+        document.getElementById('availability-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            dropZone.classList.remove('active');
-            handleFileSelect(e.dataTransfer.files[0]);
-        });
-        
-        // Add event listeners to checkboxes
-        document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', toggleFieldSections);
-        });
-        
-        contractForm.addEventListener('submit', function(e) {
-            e.preventDefault();
             
-            // Get selected fields
-            const selectedFields = [];
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]:checked').forEach(checkbox => {
-                selectedFields.push(checkbox.dataset.field);
-            });
+            const date = document.getElementById('persian-date').value;
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+            const type = document.getElementById('consultation-type').value;
             
-            if (selectedFields.length === 0) {
-                showMessage('لطفاً حداقل یک فیلد را برای ویرایش انتخاب کنید.', 'error');
+            // Add availability
+            const availability = {
+                id: Date.now(),
+                date: date,
+                startTime: startTime,
+                endTime: endTime,
+                type: type,
+                lawyer: { name: 'وکیل' }
+            };
+            
+            showNotification('زمان خالی با موفقیت اضافه شد', 'success');
+            this.reset();
+            updateLawyerAppointments();
+        });
+
+        function updateLawyerAppointments() {
+            const container = document.getElementById('lawyer-appointments');
+            const lawyerAppointments = appointments.filter(apt => apt.lawyer.id === 1); // Assuming current lawyer
+            
+            if (lawyerAppointments.length === 0) {
+                container.innerHTML = '<p>هیچ نوبتی رزرو نشده است</p>';
                 return;
             }
             
-            const newValues = {};
-            const formInputs = document.querySelectorAll('#contractForm [data-key]');
+            container.innerHTML = lawyerAppointments.map(apt => `
+                <div style="background: var(--background-color); padding: 15px; border-radius: var(--border-radius); margin-bottom: 10px;">
+                    <p><strong>موکل:</strong> ${apt.client.name}</p>
+                    <p><strong>تاریخ:</strong> ${apt.date}</p>
+                    <p><strong>ساعت:</strong> ${apt.time}</p>
+                    <p><strong>وضعیت:</strong> <span class="badge badge-success">تایید شده</span></p>
+                </div>
+            `).join('');
+        }
+
+        // Chat Functions
+        function initializeChat() {
+            const messagesContainer = document.getElementById('chat-messages');
+            messagesContainer.innerHTML = `
+                <div class="message received">
+                    <div class="message-content">
+                        سلام، من وکیل شما هستم. چطور می‌تونم کمکتون کنم؟
+                    </div>
+                </div>
+            `;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
             
-            formInputs.forEach(input => {
-                const key = input.dataset.key;
-                // Only include values for selected fields
-                if (selectedFields.includes(key) || 
-                    (selectedFields.includes('contract_dates') && (key === 'contract_start_date' || key === 'contract_end_date'))) {
-                    newValues[key] = input.value.trim();
-                }
-            });
+            if (!message) return;
             
-            // Always include owner_full_name for identification, even if not selected
-            if (!newValues.owner_full_name && originalValues.owner_full_name) {
-                newValues.owner_full_name = originalValues.owner_full_name;
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            // Add user message
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message sent';
+            userMessage.innerHTML = `<div class="message-content">${message}</div>`;
+            messagesContainer.appendChild(userMessage);
+            
+            // Add lawyer response (simulated)
+            setTimeout(() => {
+                const lawyerMessage = document.createElement('div');
+                lawyerMessage.className = 'message received';
+                lawyerMessage.innerHTML = `<div class="message-content">متوجه شدم. بذارید بررسی کنم و راهنمایی‌تون کنم.</div>`;
+                messagesContainer.appendChild(lawyerMessage);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 1000);
+            
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Admin Panel Functions
+        function updateAdminPanel() {
+            document.getElementById('total-clients').textContent = clients.length + 5;
+            document.getElementById('total-lawyers').textContent = lawyers.length;
+            document.getElementById('today-appointments').textContent = appointments.length;
+            document.getElementById('completed-consultations').textContent = Math.floor(Math.random() * 50) + 20;
+            
+            // Display lawyers
+            const lawyersContainer = document.getElementById('admin-lawyers');
+            lawyersContainer.innerHTML = lawyers.map(lawyer => `
+                <div style="background: var(--background-color); padding: 15px; border-radius: var(--border-radius); margin-bottom: 10px;">
+                    <p><strong>${lawyer.name}</strong></p>
+                    <p>تخصص: ${lawyer.specialty}</p>
+                    <p>امتیاز: ⭐ ${lawyer.rating}</p>
+                    <button class="btn btn-warning" style="margin-top: 5px;">ویرایش</button>
+                </div>
+            `).join('');
+            
+            // Display requests
+            const requestsContainer = document.getElementById('admin-requests');
+            requestsContainer.innerHTML = `
+                <div style="background: var(--background-color); padding: 15px; border-radius: var(--border-radius); margin-bottom: 10px;">
+                    <p><strong>درخواست جدید مشاوره</strong></p>
+                    <p>نوع: خانواده و طلاق</p>
+                    <p>وضعیت: <span class="badge badge-warning">در انتظار</span></p>
+                    <button class="btn btn-success" style="margin-top: 5px;">تایید</button>
+                </div>
+            `;
+            
+            // Display reports
+            const reportsContainer = document.getElementById('admin-reports');
+            reportsContainer.innerHTML = `
+                <div style="background: var(--background-color); padding: 15px; border-radius: var(--border-radius); margin-bottom: 10px;">
+                    <p><strong>گزارش ماهانه</strong></p>
+                    <p>تعداد مشاوره‌ها: ۱۵۰</p>
+                    <p>درآمد کل: ۲۵,۰۰۰,۰۰۰ تومان</p>
+                    <p>رضایت مشتریان: ۹۲٪</p>
+                </div>
+            `;
+        }
+
+        // Utility Functions
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Event Listeners
+        document.getElementById('chat-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
             }
-            
-            if (!newValues.owner_full_name) {
-                showMessage('لطفاً نام مالک را برای شناسایی قرارداد وارد کنید.', 'error');
-                return;
-            }
-            
-            contractsToProcess.push({ newValues, selectedFields });
-            updateContractList();
-            showMessage(`قرارداد برای "${newValues.owner_full_name}" به صف ساخت اضافه شد.`, 'success');
-            
-            // Clear form after adding
-            contractForm.reset();
         });
-        
-        clearFormBtn.addEventListener('click', function() {
-            contractForm.reset();
-            showMessage('فرم پاک شد.', 'success');
-        });
-        
-        fillSampleBtn.addEventListener('click', function() {
-            // Check all checkboxes first
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = true;
-            });
-            toggleFieldSections();
-            
-            // Fill sample data
-            document.getElementById('owner_full_name').value = 'علی محمدی';
-            document.getElementById('owner_father_name').value = 'حسین';
-            document.getElementById('owner_national_id').value = '1234567890';
-            document.getElementById('owner_mobile').value = '09123456789';
-            document.getElementById('owner_address').value = 'تهران، خیابان ولیعصر، پلاک 123';
-            document.getElementById('contract_start_date').value = '1402/01/01';
-            document.getElementById('contract_end_date').value = '1403/01/01';
-            document.getElementById('guarantee_amount').value = '10,000,000';
-            showMessage('فرم با اطلاعات نمونه پر شد.', 'success');
-        });
-        
-        // ==================== Main Processing Logic ====================
-        processBtn.addEventListener('click', async function() {
-            if (contractsToProcess.length === 0) {
-                showMessage('هیچ قراردادی برای ساخت در صف وجود ندارد.', 'error');
-                return;
-            }
-            
-            showMessage('در حال ساخت گروهی قراردادها...', 'processing');
-            progressContainer.style.display = 'block';
-            updateProgress(0);
-            this.disabled = true;
-            addToListBtn.disabled = true;
-            clearFormBtn.disabled = true;
-            fillSampleBtn.disabled = true;
-            
-            const finalZip = new JSZip();
-            let processedCount = 0;
-            
-            try {
-                for (let i = 0; i < contractsToProcess.length; i++) {
-                    const contract = contractsToProcess[i];
-                    let processedContent = originalContent;
-                    
-                    // Replace only the selected fields
-                    for (const key in contract.newValues) {
-                        const oldValue = originalValues[key];
-                        const newValue = contract.newValues[key];
-                        
-                        // Only replace if the field was selected and values are different
-                        if (oldValue && newValue && oldValue !== newValue) {
-                            // Escape special regex characters in oldValue
-                            const escapedOldValue = oldValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            const regex = new RegExp(escapedOldValue, 'g');
-                            processedContent = processedContent.replace(regex, newValue);
-                        }
-                    }
-                    
-                    const tempZip = await JSZip.loadAsync(await referenceFile.arrayBuffer());
-                    tempZip.file("word/document.xml", processedContent);
-                    const outputBlob = await tempZip.generateAsync({ type: "blob" });
-                    finalZip.file(`قرارداد-${contract.newValues.owner_full_name || 'نامشخص'}.docx`, outputBlob);
-                    
-                    processedCount++;
-                    processedCountElement.textContent = processedCount;
-                    updateProgress(((i + 1) / contractsToProcess.length) * 100);
-                }
-                
-                const zipBlob = await finalZip.generateAsync({ type: "blob" });
-                saveAs(zipBlob, "قراردادهای_ساخته_شده.zip");
-                showMessage(`✅ ${contractsToProcess.length} قرارداد با موفقیت ساخته و دانلود شد.`, 'success');
-                
-                // Clear the list after processing
-                contractsToProcess = [];
-                updateContractList();
-            } catch (error) {
-                showMessage(`❌ خطای جدی در ساخت فایل‌ها: ${error.message}`, 'error');
-                console.error(error);
-            } finally {
-                this.disabled = false;
-                addToListBtn.disabled = false;
-                clearFormBtn.disabled = false;
-                fillSampleBtn.disabled = false;
-            }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateLawyerAppointments();
+            updateAdminPanel();
         });
     </script>
 </body>
