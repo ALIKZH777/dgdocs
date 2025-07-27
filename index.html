@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ویرایشگر قراردادهای حمل و نقل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a3a5f;
+            --secondary-color: #2c8cbc;
+            --accent-color: #e63946;
+            --light-bg: #f1f8fc;
+            --dark-text: #212529;
+            --light-text: #f8f9fa;
+            --border-color: #c5d5e0;
+            --success-color: #2a9d8f;
+            --warning-color: #e9c46a;
+            --error-color: #e76f51;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+            color: var(--dark-text);
+            line-height: 1.7;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0d1b2a 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            padding: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel {
+            background: var(--light-bg);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .panel h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--secondary-color);
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .panel h2::before {
+            content: "📋";
+            margin-left: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary-color);
+            font-size: 1.05rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1.05rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(44, 140, 188, 0.2);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-align: center;
+            transition: var(--transition);
+            text-decoration: none;
+            margin: 8px 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn i {
+            margin-left: 8px;
+            font-size: 1.2rem;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #1a6b8f;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            background: #b0bec5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+
+        .btn-accent:hover:not(:disabled) {
+            background: #c1121f;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #218a7d;
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            border: 3px dashed var(--border-color);
+            border-radius: 15px;
+            background: white;
+            transition: var(--transition);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .file-upload-wrapper:hover {
+            border-color: var(--secondary-color);
+            background: rgba(44, 140, 188, 0.05);
+        }
+
+        .file-upload-wrapper.active {
+            border-color: var(--success-color);
+            background: rgba(42, 157, 143, 0.05);
+        }
+
+        .file-upload-icon {
+            font-size: 4rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .file-upload-wrapper:hover .file-upload-icon {
+            transform: scale(1.1);
+        }
+
+        .file-upload-text {
+            text-align: center;
+            color: var(--dark-text);
+        }
+
+        .file-upload-text h3 {
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+        }
+
+        #fileInput {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-list {
+            margin-top: 25px;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            background: white;
+        }
+
+        .file-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            border-radius: 6px;
+        }
+
+        .file-item:hover {
+            background-color: rgba(44, 140, 188, 0.05);
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-left: 12px;
+            font-size: 0.95rem;
+        }
+
+        .file-remove {
+            color: var(--error-color);
+            cursor: pointer;
+            font-size: 1.4rem;
+            transition: var(--transition);
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        .file-remove:hover {
+            background-color: rgba(231, 111, 81, 0.1);
+            transform: scale(1.2);
+        }
+
+        .progress-container {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 25px;
+            background: #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+            width: 0%;
+            transition: width 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 1.1rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-message.success {
+            background: rgba(42, 157, 143, 0.15);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+            display: block;
+        }
+
+        .status-message.error {
+            background: rgba(231, 111, 81, 0.15);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            display: block;
+        }
+
+        .status-message.processing {
+            background: rgba(233, 196, 106, 0.15);
+            color: #856404;
+            border: 1px solid var(--warning-color);
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: var(--light-bg);
+            color: var(--dark-text);
+            border-top: 1px solid var(--border-color);
+            font-size: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .instructions {
+            background: #e3f2fd;
+            border-right: 5px solid var(--secondary-color);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .instructions h3::before {
+            content: "ℹ️";
+            margin-left: 10px;
+        }
+
+        .instructions ul {
+            padding-right: 25px;
+        }
+
+        .instructions li {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .section-title::before {
+            content: "🔹";
+            margin-left: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .input-group .form-group {
+            flex: 1;
+        }
+
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        .highlight {
+            background-color: rgba(233, 196, 106, 0.3);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔧 ویرایشگر قراردادهای حمل و نقل</h1>
+            <p>ابزار جامع و دقیق برای ویرایش انبوه قراردادهای Word بدون نیاز به سرور</p>
+        </header>
+
+        <div class="main-content">
+            <div class="panel">
+                <h2>📤 آپلود فایل‌ها</h2>
+                <div class="instructions">
+                    <h3>راهنمای استفاده:</h3>
+                    <ul>
+                        <li>فایل‌های Word (.docx) قراردادها را <span class="highlight">آپلود</span> کنید</li>
+                        <li><span class="highlight">نوع تغییر</span> قرارداد را انتخاب نمایید</li>
+                        <li><span class="highlight">اطلاعات جدید</span> را وارد کنید</li>
+                        <li>روی "<span class="highlight">پردازش فایل‌ها</span>" کلیک کنید</li>
+                        <li>فایل‌های ویرایش‌شده را <span class="highlight">دانلود</span> نمایید</li>
+                    </ul>
+                </div>
+                
+                <div class="file-upload-wrapper" id="dropZone">
+                    <div class="file-upload-icon">📁</div>
+                    <div class="file-upload-text">
+                        <h3>فایل‌های قرارداد را اینجا بکشید</h3>
+                        <p>یا برای انتخاب فایل کلیک کنید</p>
+                        <small style="color: #666;">(فقط فایل‌های .docx مجاز هستند)</small>
+                    </div>
+                    <input type="file" id="fileInput" accept=".docx" multiple>
+                </div>
+                
+                <div class="file-list" id="fileList">
+                    <p style="text-align: center; color: #666;">هیچ فایلی آپلود نشده است.</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>⚙️ تنظیمات ویرایش</h2>
+                
+                <div class="form-group">
+                    <label for="contractType">نوع تغییر قرارداد:</label>
+                    <select id="contractType">
+                        <option value="three-month">📅 تمدید سه‌ماهه (فقط تاریخ)</option>
+                        <option value="annual">📅 تغییر سالیانه (تاریخ و سایر فیلدها)</option>
+                    </select>
+                </div>
+
+                <div class="section-title">📅 تاریخ‌های جدید قرارداد</div>
+                <div class="input-group">
+                    <div class="form-group">
+                        <label for="newStartDate">تاریخ شروع (YYYY/MM/DD):</label>
+                        <input type="text" id="newStartDate" placeholder="مثال: 1403/01/01">
+                    </div>
+                    <div class="form-group">
+                        <label for="newEndDate">تاریخ پایان (YYYY/MM/DD):</label>
+                        <input type="text" id="newEndDate" placeholder="مثال: 1403/03/31">
+                    </div>
+                </div>
+
+                <div id="annualInputs" class="hidden">
+                    <div class="section-title">💼 اطلاعات سالیانه</div>
+                    
+                    <div class="form-group">
+                        <label for="newBankName">🏦 نام بانک:</label>
+                        <input type="text" id="newBankName" placeholder="مثال: ملی">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newDriverAmount">💰 مبلغ کمک هزینه سوخت (ریال):</label>
+                        <input type="number" id="newDriverAmount" placeholder="مثال: 291456">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newCompanyAddress">🏢 آدرس شرکت:</label>
+                        <textarea id="newCompanyAddress" rows="3" placeholder="مثال: اصفهان خیابان حیکم فرزانه خ شهدای دستگرد کوی اول پلاک21"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newBillAmount">💸 مبلغ سفته (ریال):</label>
+                        <input type="text" id="newBillAmount" placeholder="مثال: 000/000/000/1">
+                    </div>
+                </div>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px;">
+                    <button id="processBtn" class="btn btn-success" disabled>
+                        <i>🔄</i> پردازش و ایجاد فایل‌های جدید
+                    </button>
+
+                    <button id="downloadAllBtn" class="btn btn-accent" disabled>
+                        <i>📦</i> دانلود همه فایل‌ها (ZIP)
+                    </button>
+                </div>
+
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <div class="progress-text" id="progressText">0%</div>
+                    </div>
+                </div>
+
+                <div class="status-message" id="statusMessage"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 ویرایشگر قراردادهای حمل و نقل. تمامی حقوق محفوظ است.</p>
+            <p style="font-size: 0.9rem; margin-top: 10px; color: #666;">توسعه‌یافته با ❤️ برای کارایی و دقت بیشتر</p>
+        </footer>
+    </div>
+
+    <!-- Include necessary libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.37.9/docxtemplater.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.4/pizzip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pizzip/3.1.4/pizzip-utils.min.js"></script>
+
+    <script>
+        // ==================== Global Variables ====================
+        let uploadedFiles = [];
+        let processedFiles = [];
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileListElement = document.getElementById('fileList');
+        const contractTypeSelect = document.getElementById('contractType');
+        const annualInputsDiv = document.getElementById('annualInputs');
+        const processBtn = document.getElementById('processBtn');
+        const downloadAllBtn = document.getElementById('downloadAllBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // ==================== Helper Functions ====================
+        function showMessage(text, type) {
+            statusMessage.textContent = text;
+            statusMessage.className = 'status-message ' + type;
+        }
+
+        function hideMessage() {
+            statusMessage.className = 'status-message hidden';
+        }
+
+        function updateFileList() {
+            fileListElement.innerHTML = '';
+            if (uploadedFiles.length === 0) {
+                fileListElement.innerHTML = '<p style="text-align: center; color: #666;">هیچ فایلی آپلود نشده است.</p>';
+                return;
+            }
+            
+            const list = document.createElement('div');
+            uploadedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `
+                    <span class="file-name" title="${file.name}">${file.name}</span>
+                    <span class="file-remove" data-index="${index}" title="حذف فایل">×</span>
+                `;
+                list.appendChild(item);
+            });
+            fileListElement.appendChild(list);
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.file-remove').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    uploadedFiles.splice(index, 1);
+                    updateFileList();
+                    processBtn.disabled = uploadedFiles.length === 0;
+                });
+            });
+        }
+
+        function updateProgress(percent) {
+            const roundedPercent = Math.round(percent);
+            progressFill.style.width = percent + '%';
+            progressText.textContent = roundedPercent + '%';
+        }
+
+        // ==================== Event Listeners ====================
+        fileInput.addEventListener('change', function(event) {
+            const newFiles = Array.from(event.target.files);
+            uploadedFiles = uploadedFiles.concat(newFiles);
+            updateFileList();
+            processBtn.disabled = uploadedFiles.length === 0;
+            dropZone.classList.remove('active');
+        });
+
+        // Drag and drop functionality
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            dropZone.classList.add('active');
+        });
+
+        dropZone.addEventListener('dragleave', function() {
+            dropZone.classList.remove('active');
+        });
+
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            dropZone.classList.remove('active');
+            
+            const files = Array.from(e.dataTransfer.files);
+            const docxFiles = files.filter(file => file.name.endsWith('.docx'));
+            
+            if (docxFiles.length !== files.length) {
+                showMessage('فقط فایل‌های .docx مجاز هستند.', 'error');
+                setTimeout(hideMessage, 4000);
+            }
+            
+            uploadedFiles = uploadedFiles.concat(docxFiles);
+            updateFileList();
+            processBtn.disabled = uploadedFiles.length === 0;
+        });
+
+        contractTypeSelect.addEventListener('change', function() {
+            if (this.value === 'annual') {
+                annualInputsDiv.classList.remove('hidden');
+            } else {
+                annualInputsDiv.classList.add('hidden');
+            }
+        });
+
+        // ==================== Main Processing Logic ====================
+        processBtn.addEventListener('click', async function() {
+            if (uploadedFiles.length === 0) {
+                showMessage('لطفاً فایل‌ها را آپلود کنید.', 'error');
+                setTimeout(hideMessage, 3000);
+                return;
+            }
+
+            const newStartDateStr = document.getElementById('newStartDate').value.trim();
+            const newEndDateStr = document.getElementById('newEndDate').value.trim();
+
+            if (!newStartDateStr || !newEndDateStr) {
+                showMessage('لطفاً هر دو تاریخ شروع و پایان را وارد کنید.', 'error');
+                setTimeout(hideMessage, 3000);
+                return;
+            }
+
+            // Basic validation for Persian date format
+            const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
+            if (!dateRegex.test(newStartDateStr) || !dateRegex.test(newEndDateStr)) {
+                showMessage('فرمت تاریخ باید YYYY/MM/DD باشد (مثال: 1403/01/01).', 'error');
+                setTimeout(hideMessage, 4000);
+                return;
+            }
+
+            const contractType = contractTypeSelect.value;
+            let additionalData = {};
+            if (contractType === 'annual') {
+                additionalData.newBankName = document.getElementById('newBankName').value.trim();
+                additionalData.newDriverAmount = document.getElementById('newDriverAmount').value.trim();
+                additionalData.newCompanyAddress = document.getElementById('newCompanyAddress').value.trim();
+                additionalData.newBillAmount = document.getElementById('newBillAmount').value.trim();
+
+                if (!additionalData.newBankName || !additionalData.newDriverAmount ||
+                    !additionalData.newCompanyAddress || !additionalData.newBillAmount) {
+                    showMessage('لطفاً تمام اطلاعات سالیانه را وارد کنید.', 'error');
+                    setTimeout(hideMessage, 3000);
+                    return;
+                }
+            }
+
+            // Reset processed files array
+            processedFiles = [];
+            progressContainer.style.display = 'block';
+            showMessage('در حال پردازش فایل‌ها...', 'processing');
+            downloadAllBtn.disabled = true;
+            processBtn.disabled = true;
+
+            try {
+                const totalFiles = uploadedFiles.length;
+                for (let i = 0; i < totalFiles; i++) {
+                    const file = uploadedFiles[i];
+                    const arrayBuffer = await file.arrayBuffer();
+                    const zip = new PizZip(arrayBuffer);
+
+                    // Load the document content as text to perform replacements
+                    const rawContent = zip.files['word/document.xml']._data;
+                    let contentStr = typeof rawContent === 'string' ? rawContent : new TextDecoder('utf-8').decode(rawContent);
+
+                    // --- Perform Date Replacements ---
+                    function formatDateForDoc(dateStr) {
+                        const parts = dateStr.split("/");
+                        if (parts.length !== 3) return dateStr;
+                        const [y, m, d] = parts;
+                        return `${d[0]} ${d[1]} / ${m[0]} ${m[1]} / ${y[0]}${y[1]} ${y[2]} ${y[3]}`;
+                    }
+
+                    const newStartDocFormat = formatDateForDoc(newStartDateStr);
+                    const newEndDocFormat = formatDateForDoc(newEndDateStr);
+
+                    // Broad pattern to match the date format in the document
+                    const broadDatePattern = /(\d)\s*(\d)\s*\/\s*(\d)\s*(\d)\s*\/\s*(\d)(\d)\s*(\d)\s*(\d)/g;
+                    const potentialDates = [...contentStr.matchAll(broadDatePattern)];
+                    
+                    // Replace the first two dates found (assuming they are contract start/end dates)
+                    if (potentialDates.length >= 2) {
+                        const firstDateMatch = potentialDates[0][0];
+                        const secondDateMatch = potentialDates[1][0];
+                        
+                        contentStr = contentStr.replace(firstDateMatch, newStartDocFormat);
+                        contentStr = contentStr.replace(secondDateMatch, newEndDocFormat);
+                    } else {
+                        // Fallback: try replacing the specific example dates if they exist
+                        contentStr = contentStr.replace(/01\s*\/\s*0\s*4\s*\/\s*14\s*0\s*4/g, newStartDocFormat);
+                        contentStr = contentStr.replace(/31\s*\/\s*0\s*6\s*\/\s*14\s*0\s*4/g, newEndDocFormat);
+                    }
+
+                    // --- Perform Annual Replacements if needed ---
+                    if (contractType === 'annual') {
+                        // Replace Driver Amount (example from sample: 291456 ریال)
+                        const amountRegex = /(\d{3}\/\d{3}\/\d{3}\/\d+)\s*ریال/;
+                        if (contentStr.match(amountRegex)) {
+                            contentStr = contentStr.replace(amountRegex, `${additionalData.newDriverAmount} ریال`);
+                        }
+
+                        // Replace Bank Name (example from sample: ملی)
+                        // Target the specific context "نزد بانک"
+                        const bankContextPattern = /(نزد\s*بانک\s*:\s*)([^<>\n\r\f\v]{0,20}ملی[^<>\n\r\f\v]{0,20})/g;
+                        contentStr = contentStr.replace(bankContextPattern, `$1${additionalData.newBankName}`);
+
+                        // Replace Company Address (example from sample: اصفهلان خیابان حیکم فرزانه خ شهدای دستگرد کوی اول پلاک21)
+                        const oldAddress = "اصفهلان خیابان حیکم فرزانه خ شهدای دستگرد کوی اول پلاک21";
+                        const addressPattern = new RegExp(oldAddress.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+                        contentStr = contentStr.replace(addressPattern, additionalData.newCompanyAddress);
+
+                        // Replace Bill Amount (example from sample: 000/000/ 000/ 1 ریال)
+                        const billRegex = /000\/000\/\s*000\/\s*1\s*ریال/;
+                        if (contentStr.match(billRegex)) {
+                            contentStr = contentStr.replace(billRegex, `${additionalData.newBillAmount} ریال`);
+                        }
+                    }
+
+                    // Update the content in the zip
+                    if (typeof rawContent === 'object' && rawContent.byteLength !== undefined) {
+                        const encoder = new TextEncoder();
+                        const newContentArray = encoder.encode(contentStr);
+                        zip.file('word/document.xml', newContentArray);
+                    } else {
+                        zip.file('word/document.xml', contentStr);
+                    }
+
+                    // Generate the new docx blob
+                    const out = zip.generate({ type: "blob" });
+
+                    // Create new filename
+                    const newName = file.name.replace('.docx', '_ویرایش_شده.docx');
+                    processedFiles.push({ name: newName, blob: out });
+
+                    // Update progress
+                    const progressPercent = ((i + 1) / totalFiles) * 100;
+                    updateProgress(progressPercent);
+                }
+
+                showMessage(`✅ پردازش ${processedFiles.length} فایل با موفقیت انجام شد.`, 'success');
+                downloadAllBtn.disabled = false;
+            } catch (error) {
+                console.error("Processing error:", error);
+                showMessage(`❌ خطای پردازش: ${error.message}`, 'error');
+            } finally {
+                processBtn.disabled = false;
+                setTimeout(() => {
+                    // progressContainer.style.display = 'none'; // Keep progress visible after completion
+                }, 1500);
+            }
+        });
+
+        downloadAllBtn.addEventListener('click', function() {
+            if (processedFiles.length === 0) {
+                showMessage('هیچ فایلی برای دانلود وجود ندارد.', 'error');
+                setTimeout(hideMessage, 3000);
+                return;
+            }
+
+            showMessage('📦 در حال ایجاد فایل ZIP...', 'processing');
+
+            try {
+                const zip = new JSZip();
+                processedFiles.forEach(fileObj => {
+                    zip.file(fileObj.name, fileObj.blob);
+                });
+
+                zip.generateAsync({ type: "blob" }).then(function(content) {
+                    saveAs(content, "قراردادهای_ویرایش_شده.zip");
+                    showMessage('📥 فایل ZIP با موفقیت دانلود شد.', 'success');
+                    setTimeout(hideMessage, 4000);
+                }).catch(function(err) {
+                    console.error("ZIP Generation Error:", err);
+                    showMessage(`❌ خطای ایجاد ZIP: ${err.message}`, 'error');
+                    setTimeout(hideMessage, 4000);
+                });
+            } catch (error) {
+                console.error("Download All Error:", error);
+                showMessage(`❌ خطای آماده‌سازی دانلود: ${error.message}`, 'error');
+                setTimeout(hideMessage, 4000);
+            }
+        });
+
+        // Initialize
+        updateFileList();
+    </script>
+</body>
+</html>
