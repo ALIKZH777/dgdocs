@@ -3,1055 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="دستیار هوشمند قرارداد با قابلیت تشخیص خودکار فیلدها و تولید گروهی">
+    <meta name="keywords" content="قرارداد, هوش مصنوعی, تولید خودکار, پردازش متن">
+    <meta name="author" content="Contract AI Assistant">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1d3557">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="دستیار قرارداد">
+    
     <title>دستیار قرارداد با هوش مصنوعی واقعی</title>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <style>
-        :root {
-            --primary-color: #1d3557;
-            --secondary-color: #457b9d;
-            --accent-color: #e63946;
-            --light-bg: #f1faee;
-            --dark-text: #212529;
-            --border-color: #a8dadc;
-            --success-color: #2a9d8f;
-            --warning-color: #f4a261;
-            --error-color: #e76f51;
-            --info-color: #219ebc;
-            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, #14213d 100%);
-            --gradient-secondary: linear-gradient(90deg, var(--secondary-color), var(--info-color));
-            --gradient-accent: linear-gradient(90deg, var(--accent-color), #ff6b6b);
-        }
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
-        body {
-            font-family: 'Vazirmatn', Tahoma, Arial, sans-serif;
-            background: linear-gradient(to bottom, #e0f7fa, #bbdefb);
-            color: var(--dark-text);
-            line-height: 1.7;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-        header {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 50px 30px;
-            text-align: center;
-            border-bottom: 6px solid var(--accent-color);
-            position: relative;
-            overflow: hidden;
-        }
-        header::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            transform: rotate(30deg);
-        }
-        header h1 { 
-            font-size: 3rem; 
-            margin-bottom: 10px; 
-            font-weight: 700; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); 
-            position: relative;
-            z-index: 2;
-        }
-        header p { 
-            font-size: 1.3rem; 
-            opacity: 0.9; 
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1.5fr;
-            gap: 30px;
-            padding: 30px;
-        }
-        @media (max-width: 1200px) { 
-            .main-content { 
-                grid-template-columns: 1fr; 
-            } 
-        }
-        .panel {
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 30px;
-            border: 1px solid #e9ecef;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            transition: var(--transition);
-        }
-        .panel:hover {
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-            transform: translateY(-5px);
-        }
-        .panel h2 {
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 4px solid var(--secondary-color);
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-        }
-        .panel h2 i {
-            margin-left: 15px;
-            font-size: 1.8rem;
-        }
-        .form-group { 
-            margin-bottom: 22px; 
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-        input, textarea, select {
-            width: 100%;
-            padding: 15px 18px;
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            font-family: inherit;
-            font-size: 1.05rem;
-            transition: var(--transition);
-            background-color: #f8f9fa;
-        }
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(69, 123, 157, 0.25);
-            background-color: white;
-        }
-        .btn {
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            padding: 15px 35px; 
-            background: var(--gradient-secondary); 
-            color: white;
-            border: none; 
-            border-radius: 12px; 
-            cursor: pointer;
-            font-size: 1.2rem; 
-            font-weight: 700; 
-            transition: var(--transition);
-            margin: 5px; 
-            text-decoration: none; 
-            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
-            min-width: 200px;
-        }
-        .btn:hover:not(:disabled) {
-            background: var(--gradient-primary);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-        .btn:disabled { 
-            background: #ced4da; 
-            cursor: not-allowed; 
-            box-shadow: none; 
-            transform: none;
-        }
-        .btn-accent { 
-            background: var(--gradient-accent); 
-        }
-        .btn-accent:hover:not(:disabled) { 
-            background: linear-gradient(90deg, #c91c28, #ff4b4b);
-        }
-        .btn-success { 
-            background: var(--gradient-secondary); 
-        }
-        .btn-success:hover:not(:disabled) { 
-            background: linear-gradient(90deg, #218a7d, #3bb09d);
-        }
-        .btn-warning {
-            background: var(--gradient-accent);
-        }
-        .btn-warning:hover:not(:disabled) {
-            background: linear-gradient(90deg, #e76f51, #f4a261);
-        }
-        .file-upload-wrapper {
-            position: relative; 
-            padding: 50px; 
-            border: 3px dashed var(--border-color);
-            border-radius: 20px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: var(--transition);
-            background-color: var(--light-bg);
-            min-height: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .file-upload-wrapper:hover, .file-upload-wrapper.active {
-            border-color: var(--secondary-color);
-            transform: scale(1.02);
-            background: #eaf7f7;
-        }
-        #fileInput { 
-            display: none; 
-        }
-        #fileName { 
-            margin-top: 15px; 
-            color: var(--success-color); 
-            font-weight: 600; 
-            font-size: 1.2rem; 
-        }
-        .file-list { 
-            margin-top: 20px; 
-            max-height: 300px; 
-            overflow-y: auto; 
-            border: 1px solid #ddd; 
-            border-radius: 10px; 
-            padding: 10px; 
-            background: #f8f9fa; 
-        }
-        .file-item { 
-            padding: 14px; 
-            border-bottom: 1px solid #e9ecef; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            transition: background-color 0.2s; 
-        }
-        .file-item:last-child { 
-            border-bottom: none; 
-        }
-        .file-item:hover { 
-            background-color: #e9ecef; 
-        }
-        .file-remove { 
-            color: var(--accent-color); 
-            cursor: pointer; 
-            font-size: 1.6rem; 
-            font-weight: bold; 
-            transition: var(--transition);
-        }
-        .file-remove:hover {
-            transform: scale(1.2);
-        }
-        .progress-container { 
-            margin-top: 25px; 
-            display: none; 
-        }
-        .progress-bar { 
-            height: 30px; 
-            background: #e9ecef; 
-            border-radius: 15px; 
-            overflow: hidden; 
-            position: relative; 
-        }
-        .progress-fill { 
-            height: 100%; 
-            background: var(--gradient-secondary); 
-            width: 0%; 
-            transition: width 0.5s ease; 
-        }
-        .progress-text { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            font-weight: bold; 
-            font-size: 1.1rem; 
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.4); 
-        }
-        .status-message { 
-            margin-top: 20px; 
-            padding: 20px; 
-            border-radius: 12px; 
-            text-align: center; 
-            font-weight: 500; 
-            font-size: 1.2rem; 
-            display: none; 
-            animation: fadeIn 0.5s ease; 
-            position: relative;
-            overflow: hidden;
-        }
-        .status-message::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%);
-        }
-        .status-message.processing::before {
-            animation: shimmer 1.5s infinite;
-        }
-        @keyframes fadeIn { 
-            from { 
-                opacity: 0; 
-                transform: translateY(10px); 
-            } 
-            to { 
-                opacity: 1; 
-                transform: translateY(0); 
-            } 
-        }
-        @keyframes shimmer {
-            100% {
-                transform: translateX(100%);
-            }
-        }
-        .status-message.success { 
-            background: #e6fffa; 
-            color: #047857; 
-            border: 2px solid #6ee7b7; 
-            display: block; 
-        }
-        .status-message.error { 
-            background: #fee2e2; 
-            color: #b91c1c; 
-            border: 2px solid #fca5a5; 
-            display: block; 
-        }
-        .status-message.processing { 
-            background: #fef9c3; 
-            color: #a16207; 
-            border: 2px solid #fde047; 
-            display: block; 
-        }
-        .input-group { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 25px; 
-        }
-        @media (max-width: 600px) { 
-            .input-group { 
-                grid-template-columns: 1fr; 
-                gap: 0; 
-            } 
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            background: var(--primary-color);
-            color: white;
-            font-size: 1rem;
-        }
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
-        }
-        .feature-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
-        .feature-list li i {
-            margin-left: 10px;
-            color: var(--success-color);
-        }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        .stat-item {
-            text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            flex: 1;
-            margin: 5px;
-            min-width: 120px;
-        }
-        .stat-item .number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        .stat-item .label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            cursor: help;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: var(--dark-text);
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9rem;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
-        }
-        .card-title {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        .card-title i {
-            margin-left: 10px;
-        }
-        .instructions {
-            background: #e3f2fd;
-            border-right: 4px solid var(--info-color);
-            padding: 15px;
-            border-radius: 0 10px 10px 0;
-            margin: 20px 0;
-        }
-        .instructions h3 {
-            margin-top: 0;
-            color: var(--info-color);
-        }
-        .instructions ul {
-            padding-right: 20px;
-        }
-        .instructions li {
-            margin-bottom: 10px;
-        }
-        /* Checkbox styling for selective fields */
-        .field-checkbox {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            transition: background-color 0.3s;
-        }
-        .field-checkbox:hover {
-            background-color: #e9ecef;
-        }
-        .field-checkbox input[type="checkbox"] {
-            width: auto;
-            margin-left: 10px;
-            transform: scale(1.3);
-        }
-        .field-checkbox label {
-            margin-bottom: 0;
-            cursor: pointer;
-            font-weight: normal;
-        }
-        .checkbox-group {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            background-color: #fafafa;
-        }
-        .checkbox-group h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-        }
-        .checkbox-group h3 i {
-            margin-left: 10px;
-        }
-        .field-section {
-            display: none;
-        }
-        .field-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-    </style>
+    
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" integrity="sha512-XMVd28F1oH/O71fzwBnV7HucLxVwtxf26XV8P4wPk26EDxuGZ91N8bsOttmnomcCD3CS5ZMRL50H0GgOHvegtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" integrity="sha512-P9bmyZ3h/PRnlQ98OXcKPxV+wxSZs6RKQR2khCqF3Z4McD7LhzWRFAQTBzO7qCHw5Df7QHFE4VgV3NZK6IG6uA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- Persian Date Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/persian-date/1.1.0/persian-date.min.js" integrity="sha512-gvvlKxHLlwQnhJmL7fYoV3k9w0T2VeLjbpJnaDDL9M7l3nNkYj/q6SWrYUBJQ5dTnfL8d5I6VNMkJLVSdF7VCA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-robot"></i> دستیار هوشمند قرارداد</h1>
-            <p>قراردادهای تکمیل‌شده را آپلود کنید، هوش مصنوعی فیلدها را تشخیص می‌دهد، سپس ویرایش و به صورت گروهی تولید کنید</p>
-        </header>
-        
-        <div class="main-content">
-            <div class="panel">
-                <h2><i class="fas fa-upload"></i> ۱. بارگذاری و تحلیل</h2>
-                <div class="file-upload-wrapper" id="dropZone">
-                    <i class="fas fa-file-word fa-3x" style="color: var(--secondary-color); margin-bottom: 15px;"></i>
-                    <h3>فایل قرارداد مرجع (.docx) را اینجا بکشید</h3>
-                    <p>یا برای انتخاب کلیک کنید</p>
-                    <input type="file" id="fileInput" accept=".docx">
-                    <div id="fileName"></div>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <i class="fas fa-robot fa-3x loading-icon"></i>
+            <h2>در حال بارگذاری دستیار هوشمند...</h2>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="container" id="mainApp" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-icon">
+                    <i class="fas fa-robot" aria-label="Robot Icon"></i>
                 </div>
-                
-                <div class="instructions">
-                    <h3><i class="fas fa-info-circle"></i> راهنمای استفاده</h3>
-                    <ul>
-                        <li>فایل قرارداد مرجع خود را در این قسمت آپلود کنید</li>
-                        <li>سیستم به طور خودکار فیلدهای قرارداد را تشخیص می‌دهد</li>
-                        <li>فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید</li>
-                        <li>اطلاعات جدید را وارد کرده و به لیست اضافه کنید</li>
-                        <li>در نهایت تمام قراردادها را به صورت یک فایل ZIP دانلود کنید</li>
-                    </ul>
+                <div class="header-text">
+                    <h1>دستیار هوشمند قرارداد</h1>
+                    <p>قراردادهای تکمیل‌شده را آپلود کنید، هوش مصنوعی فیلدها را تشخیص می‌دهد، سپس ویرایش و به صورت گروهی تولید کنید</p>
                 </div>
-                
-                <h2 style="margin-top: 30px;"><i class="fas fa-list"></i> ۲. صف ساخت قراردادها</h2>
-                <div class="file-list" id="contractList">
-                    <p style="text-align: center; color: #666;">قراردادی در صف ساخت نیست.</p>
-                </div>
-                
-                <div class="progress-container" id="progressContainer">
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                        <div class="progress-text" id="progressText">0%</div>
-                    </div>
-                </div>
-                
-                <div id="statusMessage" class="status-message"></div>
-                
-                <div style="text-align: center; margin-top: 25px;">
-                    <button id="processBtn" class="btn btn-success" disabled>
-                        <i class="fas fa-download"></i> ساخت همه قراردادها و دانلود (ZIP)
+                <div class="header-actions">
+                    <button id="themeToggle" class="btn-icon" title="تغییر تم">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="helpBtn" class="btn-icon" title="راهنما">
+                        <i class="fas fa-question-circle"></i>
                     </button>
                 </div>
             </div>
-            
-            <div class="panel">
-                <h2><i class="fas fa-edit"></i> ۳. فرم ویرایش اطلاعات (تشخیص خودکار)</h2>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Panel -->
+            <section class="panel upload-panel" id="uploadPanel">
+                <header class="panel-header">
+                    <h2><i class="fas fa-upload" aria-hidden="true"></i> ۱. بارگذاری و تحلیل</h2>
+                    <div class="panel-actions">
+                        <button id="resetBtn" class="btn-sm btn-outline" title="شروع مجدد">
+                            <i class="fas fa-redo-alt"></i>
+                        </button>
+                    </div>
+                </header>
                 
-                <div class="checkbox-group">
-                    <h3><i class="fas fa-check-square"></i> فیلدهای قابل ویرایش</h3>
-                    <p>فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید:</p>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_full_name" data-field="owner_full_name">
-                        <label for="chk_owner_full_name">نام و نام خانوادگی مالک</label>
+                <div class="upload-section">
+                    <div class="file-upload-wrapper" id="dropZone" tabindex="0" role="button" aria-label="انتخاب فایل قرارداد">
+                        <div class="upload-content">
+                            <i class="fas fa-file-word upload-icon" aria-hidden="true"></i>
+                            <h3 class="upload-title">فایل قرارداد مرجع (.docx) را اینجا بکشید</h3>
+                            <p class="upload-subtitle">یا برای انتخاب کلیک کنید</p>
+                            <div class="upload-info">
+                                <small>حداکثر حجم: 10 مگابایت</small>
+                            </div>
+                        </div>
+                        <input type="file" id="fileInput" accept=".docx" aria-label="انتخاب فایل قرارداد">
+                        <div id="fileName" class="file-name"></div>
                     </div>
                     
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_father_name" data-field="owner_father_name">
-                        <label for="chk_owner_father_name">نام پدر</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_national_id" data-field="owner_national_id">
-                        <label for="chk_owner_national_id">کد ملی مالک</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_mobile" data-field="owner_mobile">
-                        <label for="chk_owner_mobile">شماره موبایل</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_owner_address" data-field="owner_address">
-                        <label for="chk_owner_address">آدرس مالک</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_contract_dates" data-field="contract_dates">
-                        <label for="chk_contract_dates">تاریخ‌های قرارداد</label>
-                    </div>
-                    
-                    <div class="field-checkbox">
-                        <input type="checkbox" id="chk_guarantee_amount" data-field="guarantee_amount">
-                        <label for="chk_guarantee_amount">مبلغ سفته</label>
+                    <!-- File Analysis Results -->
+                    <div id="analysisResults" class="analysis-results" style="display: none;">
+                        <h4><i class="fas fa-chart-bar"></i> نتایج تحلیل فایل</h4>
+                        <div class="analysis-grid">
+                            <div class="analysis-item">
+                                <span class="analysis-label">فیلدهای شناسایی شده:</span>
+                                <span class="analysis-value" id="detectedFields">0</span>
+                            </div>
+                            <div class="analysis-item">
+                                <span class="analysis-label">اندازه فایل:</span>
+                                <span class="analysis-value" id="fileSize">-</span>
+                            </div>
+                            <div class="analysis-item">
+                                <span class="analysis-label">آخرین تغییر:</span>
+                                <span class="analysis-value" id="lastModified">-</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
-                <form id="contractForm">
-                    <div id="fieldSections">
-                        <!-- Owner Full Name Section -->
-                        <div class="field-section" id="section_owner_full_name">
-                            <div class="form-group">
-                                <label for="owner_full_name">نام و نام خانوادگی مالک</label>
-                                <input type="text" id="owner_full_name" data-key="owner_full_name">
-                            </div>
+                <!-- Instructions -->
+                <div class="instructions">
+                    <h3><i class="fas fa-info-circle" aria-hidden="true"></i> راهنمای استفاده</h3>
+                    <ul class="instructions-list">
+                        <li><i class="fas fa-check" aria-hidden="true"></i> فایل قرارداد مرجع خود را در این قسمت آپلود کنید</li>
+                        <li><i class="fas fa-check" aria-hidden="true"></i> سیستم به طور خودکار فیلدهای قرارداد را تشخیص می‌دهد</li>
+                        <li><i class="fas fa-check" aria-hidden="true"></i> فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید</li>
+                        <li><i class="fas fa-check" aria-hidden="true"></i> اطلاعات جدید را وارد کرده و به لیست اضافه کنید</li>
+                        <li><i class="fas fa-check" aria-hidden="true"></i> در نهایت تمام قراردادها را به صورت یک فایل ZIP دانلود کنید</li>
+                    </ul>
+                </div>
+                
+                <!-- Contract Queue -->
+                <div class="queue-section">
+                    <header class="section-header">
+                        <h3><i class="fas fa-list" aria-hidden="true"></i> ۲. صف ساخت قراردادها</h3>
+                        <div class="queue-actions">
+                            <button id="clearQueueBtn" class="btn-sm btn-outline" title="پاک کردن صف" disabled>
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </div>
-                        
-                        <!-- Owner Father Name Section -->
-                        <div class="field-section" id="section_owner_father_name">
-                            <div class="form-group">
-                                <label for="owner_father_name">نام پدر</label>
-                                <input type="text" id="owner_father_name" data-key="owner_father_name">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner National ID Section -->
-                        <div class="field-section" id="section_owner_national_id">
-                            <div class="form-group">
-                                <label for="owner_national_id">کد ملی مالک</label>
-                                <input type="text" id="owner_national_id" data-key="owner_national_id">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner Mobile Section -->
-                        <div class="field-section" id="section_owner_mobile">
-                            <div class="form-group">
-                                <label for="owner_mobile">شماره موبایل</label>
-                                <input type="text" id="owner_mobile" data-key="owner_mobile">
-                            </div>
-                        </div>
-                        
-                        <!-- Owner Address Section -->
-                        <div class="field-section" id="section_owner_address">
-                            <div class="form-group">
-                                <label for="owner_address">آدرس مالک</label>
-                                <textarea id="owner_address" data-key="owner_address" rows="2"></textarea>
-                            </div>
-                        </div>
-                        
-                        <!-- Contract Dates Section -->
-                        <div class="field-section" id="section_contract_dates">
-                            <div class="input-group">
-                                <div class="form-group">
-                                    <label for="contract_start_date">تاریخ شروع قرارداد</label>
-                                    <input type="text" id="contract_start_date" data-key="contract_start_date" placeholder="YYYY/MM/DD">
-                                </div>
-                                <div class="form-group">
-                                    <label for="contract_end_date">تاریخ پایان قرارداد</label>
-                                    <input type="text" id="contract_end_date" data-key="contract_end_date" placeholder="YYYY/MM/DD">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Guarantee Amount Section -->
-                        <div class="field-section" id="section_guarantee_amount">
-                            <div class="form-group">
-                                <label for="guarantee_amount">مبلغ سفته</label>
-                                <input type="text" id="guarantee_amount" data-key="guarantee_amount">
-                            </div>
+                    </header>
+                    
+                    <div class="contract-list" id="contractList">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox fa-2x"></i>
+                            <p>قراردادی در صف ساخت نیست.</p>
                         </div>
                     </div>
                     
-                    <div style="text-align: center; margin-top: 30px;">
+                    <!-- Progress Section -->
+                    <div class="progress-section" id="progressSection" style="display: none;">
+                        <div class="progress-header">
+                            <h4>پیشرفت پردازش</h4>
+                            <span id="progressText" class="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-details">
+                            <span id="currentTask">در انتظار شروع...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Messages -->
+                    <div id="statusMessage" class="status-message" role="status" aria-live="polite"></div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="processBtn" class="btn btn-primary" disabled>
+                            <i class="fas fa-download" aria-hidden="true"></i> 
+                            <span>ساخت همه قراردادها و دانلود (ZIP)</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Edit Panel -->
+            <section class="panel edit-panel" id="editPanel">
+                <header class="panel-header">
+                    <h2><i class="fas fa-edit" aria-hidden="true"></i> ۳. فرم ویرایش اطلاعات</h2>
+                    <div class="panel-actions">
+                        <button id="selectAllFields" class="btn-sm btn-outline">
+                            <i class="fas fa-check-double"></i> انتخاب همه
+                        </button>
+                        <button id="deselectAllFields" class="btn-sm btn-outline">
+                            <i class="fas fa-times"></i> لغو انتخاب
+                        </button>
+                    </div>
+                </header>
+                
+                <!-- Field Selection -->
+                <div class="field-selection">
+                    <h3><i class="fas fa-check-square" aria-hidden="true"></i> فیلدهای قابل ویرایش</h3>
+                    <p class="selection-hint">فقط فیلدهایی که می‌خواهید تغییر دهید را تیک بزنید:</p>
+                    
+                    <div class="checkbox-grid" id="fieldCheckboxes">
+                        <!-- Field checkboxes will be dynamically generated -->
+                    </div>
+                </div>
+                
+                <!-- Edit Form -->
+                <form id="contractForm" class="contract-form" novalidate>
+                    <div id="fieldSections" class="field-sections">
+                        <!-- Form sections will be dynamically generated -->
+                    </div>
+                    
+                    <div class="form-actions">
                         <button type="submit" id="addToListBtn" class="btn btn-accent" disabled>
-                            <i class="fas fa-plus"></i> افزودن به صف ساخت
+                            <i class="fas fa-plus" aria-hidden="true"></i> 
+                            <span>افزودن به صف ساخت</span>
                         </button>
                     </div>
                 </form>
                 
-                <div class="action-buttons">
-                    <button id="clearFormBtn" class="btn btn-warning">
-                        <i class="fas fa-eraser"></i> پاک کردن فرم
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button id="clearFormBtn" class="btn btn-outline">
+                        <i class="fas fa-eraser" aria-hidden="true"></i> پاک کردن فرم
                     </button>
-                    <button id="fillSampleBtn" class="btn">
-                        <i class="fas fa-magic"></i> پر کردن نمونه
+                    <button id="fillSampleBtn" class="btn btn-outline">
+                        <i class="fas fa-magic" aria-hidden="true"></i> پر کردن نمونه
+                    </button>
+                    <button id="validateFormBtn" class="btn btn-outline">
+                        <i class="fas fa-check-circle" aria-hidden="true"></i> بررسی صحت
                     </button>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
         
-        <div class="stats">
-            <div class="stat-item">
-                <div class="number" id="fileCount">0</div>
-                <div class="label">فایل آپلود شده</div>
+        <!-- Statistics Dashboard -->
+        <section class="stats-section">
+            <h2 class="stats-title"><i class="fas fa-chart-line"></i> آمار کلی</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="fileCount">0</div>
+                        <div class="stat-label">فایل آپلود شده</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-list-ol"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="contractCount">0</div>
+                        <div class="stat-label">قرارداد در صف</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="processedCount">0</div>
+                        <div class="stat-label">قرارداد پردازش شده</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number" id="processingTime">0</div>
+                        <div class="stat-label">زمان پردازش (ثانیه)</div>
+                    </div>
+                </div>
             </div>
-            <div class="stat-item">
-                <div class="number" id="contractCount">0</div>
-                <div class="label">قرارداد در صف</div>
-            </div>
-            <div class="stat-item">
-                <div class="number" id="processedCount">0</div>
-                <div class="label">قرارداد پردازش شده</div>
-            </div>
-        </div>
+        </section>
         
-        <div class="card">
-            <h2 class="card-title"><i class="fas fa-star"></i> ویژگی‌های برجسته</h2>
-            <ul class="feature-list">
-                <li><i class="fas fa-check-circle"></i> تشخیص خودکار فیلدهای قرارداد</li>
-                <li><i class="fas fa-check-circle"></i> انتخاب فیلدهای قابل ویرایش</li>
-                <li><i class="fas fa-check-circle"></i> پردازش گروهی قراردادها</li>
-                <li><i class="fas fa-check-circle"></i> دانلود خروجی به صورت فایل ZIP</li>
-                <li><i class="fas fa-check-circle"></i> رابط کاربری زیبا و کاربرپسند</li>
-                <li><i class="fas fa-check-circle"></i> پشتیبانی از drag & drop</li>
-                <li><i class="fas fa-check-circle"></i> نمایش پیشرفت پردازش</li>
-            </ul>
-        </div>
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="features-header">
+                <h2><i class="fas fa-star"></i> ویژگی‌های برجسته</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>تشخیص هوشمند</h3>
+                    <p>تشخیص خودکار فیلدهای قرارداد با استفاده از الگوریتم‌های پیشرفته</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <h3>انتخاب انعطاف‌پذیر</h3>
+                    <p>امکان انتخاب فیلدهای مورد نیاز برای ویرایش</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>پردازش گروهی</h3>
+                    <p>تولید چندین قرارداد به صورت همزمان</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h3>دانلود ZIP</h3>
+                    <p>دریافت تمام قراردادها در یک فایل فشرده</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>طراحی ریسپانسیو</h3>
+                    <p>سازگار با تمام دستگاه‌ها و اندازه‌های صفحه</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>امنیت بالا</h3>
+                    <p>پردازش محلی فایل‌ها بدون ارسال به سرور</p>
+                </div>
+            </div>
+        </section>
         
-        <footer>
-            <p>© 2023 دستیار هوشمند قرارداد. تمامی حقوق محفوظ است.</p>
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>دستیار هوشمند قرارداد</h3>
+                    <p>ابزاری پیشرفته برای مدیریت و تولید قراردادها با کمک هوش مصنوعی</p>
+                </div>
+                <div class="footer-section">
+                    <h4>لینک‌های مفید</h4>
+                    <ul>
+                        <li><a href="#" id="privacyLink">حریم خصوصی</a></li>
+                        <li><a href="#" id="termsLink">شرایط استفاده</a></li>
+                        <li><a href="#" id="supportLink">پشتیبانی</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>تماس با ما</h4>
+                    <p>برای سوالات و پیشنهادات با ما در ارتباط باشید</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 دستیار هوشمند قرارداد. تمامی حقوق محفوظ است.</p>
+            </div>
         </footer>
     </div>
     
-    <script>
-        // ==================== Global Variables ====================
-        let referenceFile = null;
-        let originalContent = '';
-        let originalValues = {};
-        let contractsToProcess = [];
-        const dropZone = document.getElementById('dropZone');
-        const fileInput = document.getElementById('fileInput');
-        const fileNameElement = document.getElementById('fileName');
-        const contractForm = document.getElementById('contractForm');
-        const addToListBtn = document.getElementById('addToListBtn');
-        const contractListElement = document.getElementById('contractList');
-        const processBtn = document.getElementById('processBtn');
-        const statusMessage = document.getElementById('statusMessage');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const clearFormBtn = document.getElementById('clearFormBtn');
-        const fillSampleBtn = document.getElementById('fillSampleBtn');
-        const fileCountElement = document.getElementById('fileCount');
-        const contractCountElement = document.getElementById('contractCount');
-        const processedCountElement = document.getElementById('processedCount');
-        
-        // ==================== AI-Powered Field Definitions ====================
-        function createTableAwareRegex(label) {
-            return new RegExp(`<w:t>${label}<\/w:t>.*?<\/w:tc>.*?<w:tc.*?>(.*?)<\/w:tc>`);
-        }
-        
-        const FIELD_DEFINITIONS = {
-            owner_full_name: [createTableAwareRegex('نام و نام خانوادگی:')],
-            owner_father_name: [createTableAwareRegex('نام پدر:')],
-            owner_national_id: [createTableAwareRegex('کد ملی:')],
-            owner_id_number: [createTableAwareRegex('شماره شناسنامه:')],
-            owner_mobile: [createTableAwareRegex('شماره تلفن همراه:')],
-            owner_address: [createTableAwareRegex('نشانی اقامتگاه:')],
-            dates: [/از\s*تاريخ\s*(.*?)\s*تا\s*(.*?)\s*معتبر است/],
-            guarantee_amount: [/یک عدد سفته به مبلغ\s*(.*?)\s*ریال/]
-        };
-        
-        // ==================== Helper Functions ====================
-        function showMessage(text, type) {
-            statusMessage.textContent = text;
-            statusMessage.className = 'status-message ' + type;
-        }
-        
-        function updateContractList() {
-            contractListElement.innerHTML = '';
-            if (contractsToProcess.length === 0) {
-                contractListElement.innerHTML = '<p style="text-align: center; color: #666;">قراردادی در صف ساخت نیست.</p>';
-                processBtn.disabled = true;
-                contractCountElement.textContent = '0';
-                return;
-            }
-            
-            contractsToProcess.forEach((contract, index) => {
-                const item = document.createElement('div');
-                item.className = 'file-item';
-                item.innerHTML = `
-                    <span>${index + 1}. قرارداد برای: <strong>${contract.newValues.owner_full_name || 'نامشخص'}</strong></span>
-                    <span class="file-remove" data-index="${index}" title="حذف از لیست">×</span>
-                `;
-                contractListElement.appendChild(item);
-            });
-            
-            document.querySelectorAll('.file-remove').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    contractsToProcess.splice(parseInt(this.dataset.index), 1);
-                    updateContractList();
-                });
-            });
-            
-            processBtn.disabled = false;
-            contractCountElement.textContent = contractsToProcess.length;
-        }
-        
-        function updateProgress(percent) {
-            const roundedPercent = Math.round(percent);
-            progressFill.style.width = percent + '%';
-            progressText.textContent = roundedPercent + '%';
-        }
-        
-        function updateStats() {
-            fileCountElement.textContent = referenceFile ? '1' : '0';
-            contractCountElement.textContent = contractsToProcess.length;
-        }
-        
-        // Toggle field sections based on checkbox selection
-        function toggleFieldSections() {
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-                const field = checkbox.dataset.field;
-                const section = document.getElementById(`section_${field}`);
-                
-                if (section) {
-                    if (checkbox.checked) {
-                        section.classList.add('active');
-                    } else {
-                        section.classList.remove('active');
-                    }
-                }
-            });
-            
-            // Special handling for contract dates
-            const datesChecked = document.getElementById('chk_contract_dates').checked;
-            if (datesChecked) {
-                document.getElementById('section_contract_dates').classList.add('active');
-            } else {
-                document.getElementById('section_contract_dates').classList.remove('active');
-            }
-        }
-        
-        // ==================== AI-Powered Extraction Logic ====================
-        async function extractDataFromFile(file) {
-            showMessage('در حال تحلیل هوشمند قرارداد...', 'processing');
-            try {
-                const buffer = await file.arrayBuffer();
-                const zip = await JSZip.loadAsync(buffer);
-                const doc = zip.file("word/document.xml");
-                if (!doc) throw new Error("فایل Word نامعتبر است.");
-                originalContent = await doc.async("string");
-                
-                const cleanTextContent = originalContent.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-                const structuralContent = originalContent.replace(/(\r\n|\n|\r)/gm," ");
-                
-                const cleanValue = (value) => {
-                    if (!value) return '';
-                    let cleaned = value.replace(/<[^>]+>/g, ' ');
-                    cleaned = cleaned.replace(/\s+/g, ' ').trim();
-                    cleaned = cleaned.replace(/\s*\/\s*/g, '/');
-                    return cleaned;
-                };
-                
-                originalValues = {};
-                for (const key in FIELD_DEFINITIONS) {
-                    if (key === 'dates') continue;
-                    let patternToUse = FIELD_DEFINITIONS[key][0];
-                    let contentToSearch = (key === 'guarantee_amount') ? cleanTextContent : structuralContent;
-                    const match = contentToSearch.match(patternToUse);
-                    if (match && match[1]) {
-                        originalValues[key] = cleanValue(match[1]);
-                    }
-                }
-                
-                const dateMatch = cleanTextContent.match(FIELD_DEFINITIONS.dates[0]);
-                if (dateMatch && dateMatch[1] && dateMatch[2]) {
-                    originalValues.contract_start_date = cleanValue(dateMatch[1]);
-                    originalValues.contract_end_date = cleanValue(dateMatch[2]);
-                }
-                
-                // Populate the form with extracted values
-                contractForm.reset();
-                for (const key in originalValues) {
-                    const element = document.getElementById(key);
-                    if (element) {
-                        element.value = originalValues[key] || '';
-                    }
-                }
-                
-                showMessage('تحلیل با موفقیت انجام شد. مقادیر شناسایی‌شده در فرم قرار گرفت.', 'success');
-                addToListBtn.disabled = false;
-                updateStats();
-            } catch (error) {
-                showMessage(`خطا در تحلیل فایل: ${error.message}`, 'error');
-                console.error(error);
-                addToListBtn.disabled = true;
-            }
-        }
-        
-        // ==================== Event Listeners ====================
-        function handleFileSelect(file) {
-            if (file && file.name.endsWith('.docx')) {
-                referenceFile = file;
-                fileNameElement.textContent = `فایل مرجع: ${file.name}`;
-                dropZone.classList.add('active');
-                extractDataFromFile(file);
-            } else {
-                showMessage('خطا: لطفاً یک فایل .docx معتبر انتخاب کنید.', 'error');
-            }
-        }
-        
-        dropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', (e) => handleFileSelect(e.target.files[0]));
-        dropZone.addEventListener('dragover', (e) => { 
-            e.preventDefault(); 
-            dropZone.classList.add('active'); 
-        });
-        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('active');
-            handleFileSelect(e.dataTransfer.files[0]);
-        });
-        
-        // Add event listeners to checkboxes
-        document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', toggleFieldSections);
-        });
-        
-        contractForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get selected fields
-            const selectedFields = [];
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]:checked').forEach(checkbox => {
-                selectedFields.push(checkbox.dataset.field);
-            });
-            
-            if (selectedFields.length === 0) {
-                showMessage('لطفاً حداقل یک فیلد را برای ویرایش انتخاب کنید.', 'error');
-                return;
-            }
-            
-            const newValues = {};
-            const formInputs = document.querySelectorAll('#contractForm [data-key]');
-            
-            formInputs.forEach(input => {
-                const key = input.dataset.key;
-                // Only include values for selected fields
-                if (selectedFields.includes(key) || 
-                    (selectedFields.includes('contract_dates') && (key === 'contract_start_date' || key === 'contract_end_date'))) {
-                    newValues[key] = input.value.trim();
-                }
-            });
-            
-            // Always include owner_full_name for identification, even if not selected
-            if (!newValues.owner_full_name && originalValues.owner_full_name) {
-                newValues.owner_full_name = originalValues.owner_full_name;
-            }
-            
-            if (!newValues.owner_full_name) {
-                showMessage('لطفاً نام مالک را برای شناسایی قرارداد وارد کنید.', 'error');
-                return;
-            }
-            
-            contractsToProcess.push({ newValues, selectedFields });
-            updateContractList();
-            showMessage(`قرارداد برای "${newValues.owner_full_name}" به صف ساخت اضافه شد.`, 'success');
-            
-            // Clear form after adding
-            contractForm.reset();
-        });
-        
-        clearFormBtn.addEventListener('click', function() {
-            contractForm.reset();
-            showMessage('فرم پاک شد.', 'success');
-        });
-        
-        fillSampleBtn.addEventListener('click', function() {
-            // Check all checkboxes first
-            document.querySelectorAll('.field-checkbox input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = true;
-            });
-            toggleFieldSections();
-            
-            // Fill sample data
-            document.getElementById('owner_full_name').value = 'علی محمدی';
-            document.getElementById('owner_father_name').value = 'حسین';
-            document.getElementById('owner_national_id').value = '1234567890';
-            document.getElementById('owner_mobile').value = '09123456789';
-            document.getElementById('owner_address').value = 'تهران، خیابان ولیعصر، پلاک 123';
-            document.getElementById('contract_start_date').value = '1402/01/01';
-            document.getElementById('contract_end_date').value = '1403/01/01';
-            document.getElementById('guarantee_amount').value = '10,000,000';
-            showMessage('فرم با اطلاعات نمونه پر شد.', 'success');
-        });
-        
-        // ==================== Main Processing Logic ====================
-        processBtn.addEventListener('click', async function() {
-            if (contractsToProcess.length === 0) {
-                showMessage('هیچ قراردادی برای ساخت در صف وجود ندارد.', 'error');
-                return;
-            }
-            
-            showMessage('در حال ساخت گروهی قراردادها...', 'processing');
-            progressContainer.style.display = 'block';
-            updateProgress(0);
-            this.disabled = true;
-            addToListBtn.disabled = true;
-            clearFormBtn.disabled = true;
-            fillSampleBtn.disabled = true;
-            
-            const finalZip = new JSZip();
-            let processedCount = 0;
-            
-            try {
-                for (let i = 0; i < contractsToProcess.length; i++) {
-                    const contract = contractsToProcess[i];
-                    let processedContent = originalContent;
-                    
-                    // Replace only the selected fields
-                    for (const key in contract.newValues) {
-                        const oldValue = originalValues[key];
-                        const newValue = contract.newValues[key];
-                        
-                        // Only replace if the field was selected and values are different
-                        if (oldValue && newValue && oldValue !== newValue) {
-                            // Escape special regex characters in oldValue
-                            const escapedOldValue = oldValue.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            const regex = new RegExp(escapedOldValue, 'g');
-                            processedContent = processedContent.replace(regex, newValue);
-                        }
-                    }
-                    
-                    const tempZip = await JSZip.loadAsync(await referenceFile.arrayBuffer());
-                    tempZip.file("word/document.xml", processedContent);
-                    const outputBlob = await tempZip.generateAsync({ type: "blob" });
-                    finalZip.file(`قرارداد-${contract.newValues.owner_full_name || 'نامشخص'}.docx`, outputBlob);
-                    
-                    processedCount++;
-                    processedCountElement.textContent = processedCount;
-                    updateProgress(((i + 1) / contractsToProcess.length) * 100);
-                }
-                
-                const zipBlob = await finalZip.generateAsync({ type: "blob" });
-                saveAs(zipBlob, "قراردادهای_ساخته_شده.zip");
-                showMessage(`✅ ${contractsToProcess.length} قرارداد با موفقیت ساخته و دانلود شد.`, 'success');
-                
-                // Clear the list after processing
-                contractsToProcess = [];
-                updateContractList();
-            } catch (error) {
-                showMessage(`❌ خطای جدی در ساخت فایل‌ها: ${error.message}`, 'error');
-                console.error(error);
-            } finally {
-                this.disabled = false;
-                addToListBtn.disabled = false;
-                clearFormBtn.disabled = false;
-                fillSampleBtn.disabled = false;
-            }
-        });
-    </script>
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-question-circle"></i> راهنمای کامل</h2>
+                <button class="modal-close" id="closeHelpModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="help-sections">
+                    <div class="help-section">
+                        <h3>مرحله ۱: آپلود فایل</h3>
+                        <p>فایل قرارداد مرجع خود را با فرمت .docx آپلود کنید. سیستم به طور خودکار فیلدهای موجود را شناسایی می‌کند.</p>
+                    </div>
+                    <div class="help-section">
+                        <h3>مرحله ۲: انتخاب فیلدها</h3>
+                        <p>فیلدهایی که می‌خواهید در قراردادهای جدید تغییر دهید را انتخاب کنید.</p>
+                    </div>
+                    <div class="help-section">
+                        <h3>مرحله ۳: وارد کردن اطلاعات</h3>
+                        <p>اطلاعات جدید را در فرم وارد کرده و به صف اضافه کنید.</p>
+                    </div>
+                    <div class="help-section">
+                        <h3>مرحله ۴: تولید قراردادها</h3>
+                        <p>پس از اضافه کردن همه قراردادها، دکمه "ساخت همه" را کلیک کنید.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
